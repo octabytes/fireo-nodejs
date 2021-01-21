@@ -1,5 +1,5 @@
 const BaseField = require("./BaseField");
-const { InvalidFieldType } = require("./errors");
+const { InvalidFieldType } = require("../../errors");
 /**
  * Field for Number data
  * @extends BaseField

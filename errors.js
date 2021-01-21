@@ -10,7 +10,13 @@ class InvalidFieldType extends Error {}
  */
 class InstantiateError extends Error {}
 
+/**
+ * Required field
+ */
+class RequiredField extends Error {}
+
 module.exports = {
   InvalidFieldType,
-  InstantiateError: InstantiateError,
+  InstantiateError,
+  RequiredField,
 };

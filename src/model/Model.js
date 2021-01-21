@@ -1,4 +1,4 @@
-const { InstantiateError } = require("./errors");
+const { InstantiateError } = require("../../errors");
 const MetaModel = require("./MetaModel");
 /**
  * Firestore document model
@@ -24,6 +24,13 @@ class Model extends MetaModel {
     const obj = new this(true);
     obj.__configure();
     return obj;
+  }
+
+  /**
+   * Save model into firestore document
+   */
+  async save() {
+    this.__parseField();
   }
 }
 
