@@ -34,7 +34,10 @@ class MetaModel {
     for (const propertyName of properties) {
       const field = this[propertyName];
       if (field instanceof BaseField) {
-        field.configure(this.constructor.name);
+        field.configure({
+          modelName: this.constructor.name,
+          originalName: propertyName,
+        });
         this.__meta.fields[propertyName] = field;
         this[propertyName] = undefined;
       }
@@ -54,6 +57,7 @@ class MetaModel {
       const field = this.__meta.fields[propertyName];
 
       field.setValue(value);
+      this.__meta.fields.parse[field.name] = field.getValue;
     }
   }
 }

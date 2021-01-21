@@ -5,13 +5,15 @@ const NumberField = require("./NumberField");
  * Possible Fireo Fields
  */
 class Field {
-  static options = { required: false, default: undefined, name: undefined };
-
-  static Text(options) {
+  static Text(
+    options = { required: false, default: undefined, name: undefined }
+  ) {
     return new TextField(options);
   }
 
-  static Number(options) {
+  static Number(
+    options = { required: false, default: undefined, name: undefined }
+  ) {
     return new NumberField(options);
   }
 }

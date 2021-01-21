@@ -15,15 +15,30 @@ class BaseField {
     this.originalName;
     this.required = options.required;
     this.default = options.default;
-    this.name = options.name;
+    this.customName = options.name;
   }
 
   /**
    * configure field
    * @param {string} modelName - Model name
+   * @param {string} originalName - Field original name
    */
-  configure(modelName) {
-    this.modelName = modelName;
+  configure(options = { modelName, originalName }) {
+    this.modelName = options.modelName;
+    this.originalName = options.originalName;
+  }
+
+  /**
+   * Get field name if custom name is set then
+   * return the custom name otherwise return the
+   * original name
+   */
+  get name() {
+    if (this.customName) {
+      return this.customName;
+    }
+
+    return this.originalName;
   }
 
   /**
@@ -50,7 +65,7 @@ class BaseField {
     // Check required field
     if (fv === undefined && this.required) {
       throw new RequiredField(
-        `Field ${this.name} is required in Model ${this.modelName}, 
+        `Field ${this.originalName} is required in Model ${this.modelName}, 
         assign value or set default for ${this.originalName} field.`
       );
     }
