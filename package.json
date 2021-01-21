@@ -1,0 +1,35 @@
+{
+  "name": "fireo",
+  "version": "0.0.1",
+  "description": "Google Cloud Firestore modern and simplest convenient ORM package in NodeJs. FireO is specifically designed for the Google's Firestore",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octabytes/fireo-nodejs.git"
+  },
+  "keywords": [
+    "fireo",
+    "firestore",
+    "orm",
+    "odm",
+    "firestore-model",
+    "google-cloud-firestore"
+  ],
+  "author": "OctaByte",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/octabytes/fireo-nodejs/issues"
+  },
+  "homepage": "https://github.com/octabytes/fireo-nodejs#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^8.2.1"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^4.8.1"
+  }
+}
