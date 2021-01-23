@@ -19,8 +19,9 @@ class Collection extends BaseManager {
 
   /**
    * Get firestore document
-   * @param {string} id - Document id
-   * @param {string} key - Document key
+   * @param {Object} by - Document id or key
+   * @param {string} by.id - Document id
+   * @param {string} by.key - Document key
    */
   async get(by = { id, key }) {
     const docRef = this.__createDocRef(by);
@@ -42,6 +43,17 @@ class Collection extends BaseManager {
     });
 
     return this.__modelObj;
+  }
+
+  /**
+   * Delete firestore document
+   * @param {Object} by - Document id or key
+   * @param {string} by.id - Document id
+   * @param {string} by.key - Document key
+   */
+  async delete(by = { id, key }) {
+    const docRef = this.__createDocRef(by);
+    await docRef.delete();
   }
 }
 

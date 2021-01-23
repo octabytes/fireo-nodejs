@@ -260,4 +260,57 @@ describe("Firestore Operation", () => {
       await updateUser.update({ key: user.key });
     });
   });
+
+  //#################################
+  //######### DELETE() ##############
+  //#################################
+
+  describe("Delete()", () => {
+    class User extends Model {
+      name = Field.Text();
+    }
+
+    it("should be called from model object", async () => {
+      const user = User.init();
+      user.name = "string";
+      await user.save();
+
+      await user.delete();
+
+      await expect(User.collection.get({ key: user.key })).to.be.rejectedWith(
+        DocumentNotFound
+      );
+    });
+
+    it("throw error if key not defined", async () => {
+      const user = User.init();
+      user.name = "string";
+
+      await expect(user.delete()).to.be.rejectedWith(KeyNotExist);
+    });
+
+    it("should able to call it from `collection`", async () => {
+      const user = User.init();
+      user.name = "string";
+      await user.save();
+
+      await User.collection.delete({ key: user.key });
+
+      await expect(User.collection.get({ key: user.key })).to.be.rejectedWith(
+        DocumentNotFound
+      );
+    });
+
+    it("delete using `id` from `collection`", async () => {
+      const user = User.init();
+      user.name = "string";
+      await user.save();
+
+      await User.collection.delete({ id: user.id });
+
+      await expect(User.collection.get({ key: user.key })).to.be.rejectedWith(
+        DocumentNotFound
+      );
+    });
+  });
 });

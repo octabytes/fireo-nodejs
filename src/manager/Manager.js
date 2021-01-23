@@ -7,7 +7,8 @@ const BaseManager = require("./BaseManager");
 class Manager extends BaseManager {
   /**
    * Save model into firestore document
-   * @param {boolean} merge - Merge the fields with existing document or create
+   * @param {Object} options - Save options
+   * @param {boolean} options.merge - Merge the fields with existing document or create
    * new document if it already not exist
    */
   async save(options = { merge: false }) {
@@ -18,8 +19,9 @@ class Manager extends BaseManager {
 
   /**
    * Update model into firestore document
-   * @param {string} id - document id
-   * @param {string} key - document key
+   * @param {Object} by - Document id or key
+   * @param {string} by.id - document id
+   * @param {string} by.key - document key
    */
   async update(by = { id, key }) {
     const docRef = this.__createDocRef(by);
@@ -33,6 +35,15 @@ class Manager extends BaseManager {
       );
     }
     return { id: docRef.id, key: this.__extractKeyFromDocRef(docRef) };
+  }
+
+  /**
+   * Delete document from firestore
+   * @param {string} key - Document key
+   */
+  async delete(key) {
+    const docRef = this.__createDocRef({ key: key });
+    await docRef.delete();
   }
 }
 

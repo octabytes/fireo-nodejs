@@ -34,7 +34,8 @@ class Model extends MetaModel {
 
   /**
    * Save model into firestore document
-   * @param {boolean} merge - Merge the fields with existing document or create
+   * @param {Object} options - Save options
+   * @param {boolean} options.merge - Merge the fields with existing document or create
    * new document if it already not exist
    */
   async save(options = { merge: false }) {
@@ -62,8 +63,9 @@ class Model extends MetaModel {
 
   /**
    * Update existing firestore document
-   * @param {string} id - document id
-   * @param {string} key - document key
+   * @param {Object} by - Document id or key
+   * @param {string} by.id - document id
+   * @param {string} by.key - document key
    */
   async update(by = { id: undefined, key: undefined }) {
     let result;
@@ -82,6 +84,18 @@ class Model extends MetaModel {
       result = await manager.update(by);
     }
     this.__setIdAndKey(result.id, result.key);
+  }
+
+  /**
+   * Delete document from firestore
+   */
+  async delete() {
+    if (!this.key) {
+      throw new KeyNotExist(`No key exist in Model ${this.constructor.name}`);
+    }
+
+    const manager = new Manager(this.__meta);
+    await manager.delete(this.key);
   }
 
   /**
