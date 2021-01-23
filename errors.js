@@ -25,10 +25,16 @@ class DocumentNotFound extends Error {}
  */
 class EmptyDocument extends Error {}
 
+/**
+ * If key is not exist in Model
+ */
+class KeyNotExist extends Error {}
+
 module.exports = {
   InvalidFieldType,
   InstantiateError,
   RequiredField,
   DocumentNotFound,
   EmptyDocument,
+  KeyNotExist,
 };

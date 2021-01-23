@@ -23,6 +23,19 @@ class BaseManager {
   }
 
   /**
+   * Generate firestore doc ref from id or key
+   * @param {string} by - Document id
+   * @param {string} key - Document key
+   */
+  __createDocRef(by = { id, key }) {
+    if (by.id) {
+      return firestore.collection(this.__meta.collectionName).doc(by.id);
+    } else {
+      return firestore.doc(by.key);
+    }
+  }
+
+  /**
    * Get key from doc ref
    * @param {DocumentReference} docRef - Firestore document reference
    */

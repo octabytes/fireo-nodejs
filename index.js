@@ -16,4 +16,10 @@ const main = async () => {
   console.log(doc);
 };
 
-main();
+//main();
+
+function test(by = { id: undefined, key: undefined }) {
+  console.log("test function");
+}
+
+test();

@@ -1,4 +1,8 @@
-const { InstantiateError, EmptyDocument } = require("../../errors");
+const {
+  InstantiateError,
+  EmptyDocument,
+  KeyNotExist,
+} = require("../../errors");
 const Collection = require("../manager/Collection");
 const Manager = require("../manager/Manager");
 const MetaModel = require("./MetaModel");
@@ -48,8 +52,36 @@ class Model extends MetaModel {
     this.__setIdAndKey(id, key);
   }
 
+  /**
+   * Merge the fields with existing document or create
+   * new document if it already not exist
+   */
   async upsert() {
     await this.save({ merge: true });
+  }
+
+  /**
+   * Update existing firestore document
+   * @param {string} id - document id
+   * @param {string} key - document key
+   */
+  async update(by = { id: undefined, key: undefined }) {
+    let result;
+    this.__parseField();
+    const manager = new Manager(this.__meta);
+
+    if (!by.id && !by.key) {
+      if (!this.key) {
+        throw new KeyNotExist(
+          `No key exist in Model ${this.constructor.name}, provide id or key in update() method`
+        );
+      }
+
+      result = await manager.update({ key: this.key });
+    } else {
+      result = await manager.update(by);
+    }
+    this.__setIdAndKey(result.id, result.key);
   }
 
   /**

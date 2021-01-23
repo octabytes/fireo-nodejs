@@ -21,6 +21,9 @@ class IDField {
     this.modelName = config.modelName;
   }
 
+  /**
+   * get field name
+   */
   get name() {
     return this.originalName;
   }

@@ -1,5 +1,4 @@
 const { DocumentNotFound } = require("../../errors");
-const firestore = require("../../Firestore");
 const BaseManager = require("./BaseManager");
 
 /**
@@ -24,13 +23,7 @@ class Collection extends BaseManager {
    * @param {string} key - Document key
    */
   async get(by = { id, key }) {
-    let docRef;
-
-    if (by.id) {
-      docRef = firestore.collection(this.__meta.collectionName).doc(by.id);
-    } else {
-      docRef = firestore.doc(by.key);
-    }
+    const docRef = this.__createDocRef(by);
 
     const snapshot = await docRef.get();
 
@@ -45,7 +38,7 @@ class Collection extends BaseManager {
     this.__modelObj.__setFieldsValue({
       data: snapshot.data(),
       id: snapshot.id,
-      key: by.key || this.__extractKeyFromDocRef(docRef),
+      key: this.__extractKeyFromDocRef(docRef),
     });
 
     return this.__modelObj;

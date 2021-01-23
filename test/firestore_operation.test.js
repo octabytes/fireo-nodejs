@@ -2,7 +2,8 @@ const Chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const Model = require("../src/model/Model");
 const Field = require("../src/fields/Field");
-const { EmptyDocument } = require("../errors");
+const { EmptyDocument, DocumentNotFound, KeyNotExist } = require("../errors");
+const { use } = require("chai");
 
 const expect = Chai.expect;
 Chai.use(chaiAsPromised);
@@ -198,6 +199,65 @@ describe("Firestore Operation", () => {
       expect(doc.userId).to.equal(user.userId);
       expect(doc.key).to.equal(user.key);
       expect(doc.name).to.equal("string");
+    });
+  });
+
+  //#################################
+  //######### UPSERT() ##############
+  //#################################
+
+  describe("Update()", () => {
+    class User extends Model {
+      name = Field.Text();
+      age = Field.Number();
+    }
+
+    it("should update the existing document", async () => {
+      const user = User.init();
+      user.name = "string";
+      user.age = 1;
+      await user.save();
+
+      user.name = "updated-name";
+      await user.update();
+
+      const doc = await User.collection.get({ id: user.id });
+      expect(doc.name).to.equal("updated-name");
+      expect(doc.age).to.equal(1);
+    });
+    it("throw error if document key not exists and not provided in `update()`", async () => {
+      const user = User.init();
+      user.name = "string";
+      user.age = 1;
+      await expect(user.update()).to.be.rejectedWith(KeyNotExist);
+    });
+    it("throw error if document not exists", async () => {
+      const user = User.init();
+      user.name = "string";
+      user.age = 1;
+      await expect(
+        user.update({ id: "id-should-not-exist" })
+      ).to.be.rejectedWith(DocumentNotFound);
+    });
+    it("update document through `id`", async () => {
+      const user = User.init();
+      user.name = "string";
+      user.age = 1;
+      await user.save();
+
+      const updateUser = User.init();
+      updateUser.name = "updated-name";
+      await updateUser.update({ id: user.id });
+    });
+    it("update document through `key`", async () => {
+      const user = User.init();
+      user.name = "string";
+      user.age = 1;
+      await user.save();
+
+      const updateUser = User.init();
+      updateUser.name = "updated-name";
+      await updateUser.update({ key: user.key });
     });
   });
 });
