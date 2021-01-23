@@ -6,6 +6,15 @@ const TextField = require("../src/fields/TextField");
 const expect = chai.expect;
 
 describe("Meta Model", () => {
+  it("should keep the record of collectionName", () => {
+    class User extends Model {
+      name = Field.Text();
+    }
+
+    const user = User.init();
+    expect(user.__meta.collectionName).to.be.equal("User");
+  });
+
   describe("Model -> fields", () => {
     class User extends Model {
       name = Field.Text();
@@ -79,9 +88,9 @@ describe("Meta Model", () => {
       user.address = "user-location";
       user.__parseField();
 
-      expect(user.__meta.fields.parse.name).to.equal("string");
-      expect(user.__meta.fields.parse.age).to.equal(1);
-      expect(user.__meta.fields.parse.location).to.equal("user-location");
+      expect(user.__meta.parseFields.name).to.equal("string");
+      expect(user.__meta.parseFields.age).to.equal(1);
+      expect(user.__meta.parseFields.location).to.equal("user-location");
     });
   });
 });

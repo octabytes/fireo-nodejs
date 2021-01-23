@@ -15,8 +15,14 @@ class InstantiateError extends Error {}
  */
 class RequiredField extends Error {}
 
+/**
+ * Firestore document not found
+ */
+class DocumentNotFound extends Error {}
+
 module.exports = {
   InvalidFieldType,
   InstantiateError,
   RequiredField,
+  DocumentNotFound,
 };

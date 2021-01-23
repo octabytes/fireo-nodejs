@@ -1,4 +1,5 @@
 const BaseField = require("../fields/BaseField");
+const IDField = require("../fields/IDField");
 
 /**
  * Meta class for model
@@ -13,6 +14,7 @@ class MetaModel {
    */
   __configure() {
     this.__meta.isInstantiate = true;
+    this.__meta.collectionName = this.constructor.name;
     this.__getFields();
   }
 
@@ -33,6 +35,16 @@ class MetaModel {
     const properties = this.__getModelProperties;
     for (const propertyName of properties) {
       const field = this[propertyName];
+
+      if (field instanceof IDField) {
+        field.configure({
+          modelName: this.constructor.name,
+          name: propertyName,
+        });
+        this.__meta.id = field;
+        continue;
+      }
+
       if (field instanceof BaseField) {
         field.configure({
           modelName: this.constructor.name,
@@ -48,17 +60,45 @@ class MetaModel {
    * parse field
    */
   __parseField() {
-    this.__meta.fields.parse = {};
+    this.__meta.parseFields = {};
 
-    const properties = this.__getModelProperties;
-
-    for (const propertyName of properties) {
-      const value = this[propertyName];
-      const field = this.__meta.fields[propertyName];
-
-      field.setValue(value);
-      this.__meta.fields.parse[field.name] = field.getValue;
+    for (const [propertyName, field] of Object.entries(this.__meta.fields)) {
+      field.setValue(this[propertyName]);
+      this.__meta.parseFields[field.name] = field.getValue;
     }
+
+    // Set value of id field if any custom id provided
+    if (this.__meta.id) {
+      this.__meta.id.setValue(this[this.__meta.id.name]);
+    }
+  }
+
+  /**
+   * Set document id and key to this model object
+   * @param {string} id - document id
+   * @param {string} key - document key
+   */
+  __setIdAndKey(id, key) {
+    this.key = key;
+
+    if (this.__meta.id) {
+      this[this.__meta.id.name] = id;
+    } else {
+      this.id = id;
+    }
+  }
+
+  /**
+   * Set values to model object
+   * @param {Object{data, id, key}} result - Firestore document result
+   */
+  __setFieldsValue(result = { data, id, key }) {
+    for (const [propertyName, field] of Object.entries(this.__meta.fields)) {
+      field.setValue(result.data[field.name]);
+      this[propertyName] = field.getDBValue;
+    }
+
+    this.__setIdAndKey(result.id, result.key);
   }
 }
 

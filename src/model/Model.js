@@ -1,4 +1,6 @@
 const { InstantiateError } = require("../../errors");
+const Collection = require("../manager/Collection");
+const Manager = require("../manager/Manager");
 const MetaModel = require("./MetaModel");
 /**
  * Firestore document model
@@ -31,6 +33,18 @@ class Model extends MetaModel {
    */
   async save() {
     this.__parseField();
+    const manager = new Manager(this.__meta);
+    const { id, key } = await manager.save();
+    this.__setIdAndKey(id, key);
+  }
+
+  /**
+   * Perform firestore static operations which does not need
+   * of model object i.e get, query etc
+   */
+  static get collection() {
+    const obj = this.init();
+    return new Collection(obj);
   }
 }
 

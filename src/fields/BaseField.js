@@ -72,6 +72,14 @@ class BaseField {
 
     return fv;
   }
+
+  /**
+   * Get DB value
+   * Coming from Firestore and insert into model
+   */
+  get getDBValue() {
+    return this.val;
+  }
 }
 
 module.exports = BaseField;
