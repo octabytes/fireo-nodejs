@@ -26,9 +26,14 @@ class Model extends MetaModel {
     }
   }
 
-  static init() {
+  /**
+   * Instantiate Model
+   * @param {Object} config - Model config
+   * @param {string} config.parent - Parent document key
+   */
+  static init(config = { parent: undefined }) {
     const obj = new this(true);
-    obj.__configure();
+    obj.__configure(config);
     return obj;
   }
 

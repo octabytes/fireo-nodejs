@@ -11,8 +11,11 @@ class MetaModel {
 
   /**
    * Configure the Model
+   * @param {Object} config - Model config
+   * @param {string} config.parent - Parent document key
    */
-  __configure() {
+  __configure(config = { parent: undefined }) {
+    this.__meta.parent = config.parent;
     this.__meta.isInstantiate = true;
     this.__meta.collectionName = this.constructor.name;
     this.__getFields();

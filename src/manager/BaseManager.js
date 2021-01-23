@@ -13,13 +13,19 @@ class BaseManager {
    * Get Firestore document reference
    */
   get __getDocRef() {
-    if (this.__meta.id && this.__meta.id.getValue) {
-      return firestore
-        .collection(this.__meta.collectionName)
-        .doc(this.__meta.id.getValue);
+    let collectionPath = this.__meta.collectionName;
+
+    if (this.__meta.parent) {
+      console.log(this.__meta.parent);
+      collectionPath = this.__meta.parent;
+      collectionPath += "/" + this.__meta.collectionName;
     }
 
-    return firestore.collection(this.__meta.collectionName).doc();
+    if (this.__meta.id && this.__meta.id.getValue) {
+      return firestore.collection(collectionPath).doc(this.__meta.id.getValue);
+    }
+
+    return firestore.collection(collectionPath).doc();
   }
 
   /**
