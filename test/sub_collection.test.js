@@ -20,7 +20,7 @@ describe("Sub Collection", () => {
     address.city = "city";
     await address.save();
 
-    const doc = Address.collection.get({ key: address.key });
+    const doc = await Address.collection.get({ key: address.key });
     expect(doc.city).to.equal("city");
   });
   it("should able to save and get data with custom `id`", async () => {
@@ -34,7 +34,7 @@ describe("Sub Collection", () => {
     address.city = "city";
     await address.save();
 
-    const doc = Address.collection.get({ key: address.key });
+    const doc = await Address.collection.get({ key: address.key });
     expect(doc.city).to.equal("city");
   });
 });

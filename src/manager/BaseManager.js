@@ -16,7 +16,6 @@ class BaseManager {
     let collectionPath = this.__meta.collectionName;
 
     if (this.__meta.parent) {
-      console.log(this.__meta.parent);
       collectionPath = this.__meta.parent;
       collectionPath += "/" + this.__meta.collectionName;
     }
