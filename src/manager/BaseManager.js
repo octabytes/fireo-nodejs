@@ -13,7 +13,7 @@ class BaseManager {
    * Get Firestore document reference
    */
   get __getDocRef() {
-    if (this.__meta.id) {
+    if (this.__meta.id && this.__meta.id.getValue) {
       return firestore
         .collection(this.__meta.collectionName)
         .doc(this.__meta.id.getValue);

@@ -12,7 +12,9 @@ class TextField extends BaseField {
    */
   setValue(value) {
     if (typeof value != "string") {
-      throw new InvalidFieldType("TextField only accept string value");
+      throw new InvalidFieldType(
+        `TextField only accept string value, invalid value provided ${value} in model ${this.modelName}`
+      );
     }
 
     this.val = value;

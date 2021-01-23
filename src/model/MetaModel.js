@@ -39,9 +39,10 @@ class MetaModel {
       if (field instanceof IDField) {
         field.configure({
           modelName: this.constructor.name,
-          name: propertyName,
+          originalName: propertyName,
         });
         this.__meta.id = field;
+        this[propertyName] = undefined;
         continue;
       }
 
@@ -63,8 +64,11 @@ class MetaModel {
     this.__meta.parseFields = {};
 
     for (const [propertyName, field] of Object.entries(this.__meta.fields)) {
-      field.setValue(this[propertyName]);
-      this.__meta.parseFields[field.name] = field.getValue;
+      const value = this[propertyName];
+      if (value) {
+        field.setValue(this[propertyName]);
+        this.__meta.parseFields[field.name] = field.getValue;
+      }
     }
 
     // Set value of id field if any custom id provided

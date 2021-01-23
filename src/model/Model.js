@@ -1,4 +1,4 @@
-const { InstantiateError } = require("../../errors");
+const { InstantiateError, EmptyDocument } = require("../../errors");
 const Collection = require("../manager/Collection");
 const Manager = require("../manager/Manager");
 const MetaModel = require("./MetaModel");
@@ -30,12 +30,26 @@ class Model extends MetaModel {
 
   /**
    * Save model into firestore document
+   * @param {boolean} merge - Merge the fields with existing document or create
+   * new document if it already not exist
    */
-  async save() {
+  async save(options = { merge: false }) {
     this.__parseField();
+
+    // Check if document id not empty
+    if (Object.keys(this.__meta.parseFields).length === 0) {
+      throw new EmptyDocument(
+        `Trying to save empty document in firestore from ${this.constructor.name}`
+      );
+    }
+
     const manager = new Manager(this.__meta);
-    const { id, key } = await manager.save();
+    const { id, key } = await manager.save(options);
     this.__setIdAndKey(id, key);
+  }
+
+  async upsert() {
+    await this.save({ merge: true });
   }
 
   /**

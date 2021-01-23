@@ -20,9 +20,15 @@ class RequiredField extends Error {}
  */
 class DocumentNotFound extends Error {}
 
+/**
+ * Empty document can not save into firestore
+ */
+class EmptyDocument extends Error {}
+
 module.exports = {
   InvalidFieldType,
   InstantiateError,
   RequiredField,
   DocumentNotFound,
+  EmptyDocument,
 };

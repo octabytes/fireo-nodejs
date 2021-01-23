@@ -7,18 +7,22 @@ class IDField {
    */
   constructor() {
     this.val;
-    this.name;
+    this.originalName;
     this.modelName;
   }
 
   /**
    * configure the ID field
-   * @param {string} name - Field name
+   * @param {string} originalName - Field name
    * @param {string} modelName - Name if the model
    */
-  configure(config = { name, modelName }) {
-    this.name = config.name;
+  configure(config = { originalName, modelName }) {
+    this.originalName = config.originalName;
     this.modelName = config.modelName;
+  }
+
+  get name() {
+    return this.originalName;
   }
 
   /**
