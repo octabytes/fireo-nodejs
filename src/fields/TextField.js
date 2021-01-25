@@ -11,9 +11,13 @@ class TextField extends BaseField {
    * @param {string} value - string value
    */
   setValue(value) {
+    if (value === undefined) {
+      return;
+    }
+
     if (typeof value != "string") {
       throw new InvalidFieldType(
-        `${this.originalName} only accept string value, invalid value provided ${value} in model ${this.modelName}`
+        `${this.originalName} only accept string value in model ${this.modelName}, invalid value provided "${value}"`
       );
     }
 

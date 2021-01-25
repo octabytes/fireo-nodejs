@@ -6,36 +6,55 @@ const { DocumentNotFound } = require("../errors");
 
 const expect = Chai.expect;
 
-describe("Query", async () => {
+describe("Query", () => {
   class User extends Model {
     name = Field.Text();
     age = Fields.Number();
     address = Field.Text({ name: "location" });
   }
 
-  const user = User.init();
-  user.name = "name1";
-  user.age = 1;
-  user.address = "address1";
-  await user.save();
+  before(() => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const user = User.init();
+        user.name = "name1";
+        user.age = 1;
+        user.address = "address1";
+        user.save();
 
-  const user = User.init();
-  user.name = "name2";
-  user.age = 1;
-  user.address = "address2";
-  await user.save();
+        const user2 = User.init();
+        user2.name = "name2";
+        user2.age = 1;
+        user2.address = "address2";
+        user2.save();
 
-  const user = User.init();
-  user.name = "name2";
-  user.age = 2;
-  user.address = "address1";
-  await user.save();
+        const user3 = User.init();
+        user3.name = "name2";
+        user3.age = 2;
+        user3.address = "address1";
+        user3.save();
+        resolve();
+      }, 200);
+    });
+  });
 
   it("should able to filter", async () => {
     const docs = await User.collection.where("name", "==", "name1").fetch();
     expect(docs.length).to.greaterThan(0);
     for (const doc of docs) {
       expect(doc.name).to.equal("name1");
+    }
+  });
+
+  it("should able to apply multiple filters", async () => {
+    const docs = await User.collection
+      .where("name", "==", "name2")
+      .where("age", "==", 1)
+      .fetch();
+    expect(docs.length).to.greaterThan(0);
+    for (const doc of docs) {
+      expect(doc.name).to.equal("name2");
+      expect(doc.age).to.equal(1);
     }
   });
 
@@ -54,9 +73,14 @@ describe("Query", async () => {
     expect(doc.age).to.equal(1);
   });
 
-  it("should able to all documents", async () => {
+  it("should able to fetch all documents", async () => {
     const docs = await User.collection.fetch();
     expect(docs.length).to.greaterThan(2);
+  });
+
+  it("should able to fetch limited documents", async () => {
+    const docs = await User.collection.fetch(2);
+    expect(docs.length).to.equal(2);
   });
 
   it("should able to limit data", async () => {
@@ -69,10 +93,9 @@ describe("Query", async () => {
     expect(docs.length).to.equal(1);
     expect(docs[0].key).to.be.not.undefined;
   });
-  it("throw error no document found", async () => {
-    await expect(
-      User.collection.where("name", "==", "not-exist").fetch()
-    ).to.be.rejectedWith(DocumentNotFound);
+  it("should return the empty array", async () => {
+    const docs = await User.collection.where("name", "==", "not-exist").fetch();
+    expect(docs.length).to.equal(0);
   });
   it("should order the results", async () => {
     const docs = await User.collection
@@ -81,7 +104,7 @@ describe("Query", async () => {
       .fetch();
     expect(docs.length).to.greaterThan(0);
     let previousAge = 0;
-    for (const doc in docs) {
+    for (const doc of docs) {
       expect(doc.age).to.gte(previousAge);
       previousAge = doc.age;
     }
@@ -93,7 +116,7 @@ describe("Query", async () => {
       .fetch();
     expect(docs.length).to.greaterThan(0);
     let previousAge = 3;
-    for (const doc in docs) {
+    for (const doc of docs) {
       expect(doc.age).to.lte(previousAge);
       previousAge = doc.age;
     }

@@ -25,11 +25,11 @@ describe("Sub Collection", () => {
   });
   it("should able to save and get data with custom `id`", async () => {
     class User extends Model {
-      id = Field.ID();
+      id = Fields.ID();
       name = Fields.Text();
     }
     class Address extends Model {
-      id = Field.ID();
+      id = Fields.ID();
       city = Fields.Text();
     }
 

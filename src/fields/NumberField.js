@@ -11,9 +11,13 @@ class NumberField extends BaseField {
    * @param {number} value - number value
    */
   setValue(value) {
+    if (value === undefined) {
+      return;
+    }
+
     if (typeof value != "number") {
       throw new InvalidFieldType(
-        `${this.originalName} only accept number value, invalid value provided ${value} in model ${this.modelName}`
+        `${this.originalName} only accept number value in model ${this.modelName}, invalid value provided "${value}"`
       );
     }
 

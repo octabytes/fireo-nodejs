@@ -67,6 +67,24 @@ class Collection extends BaseManager {
     const query = new Query(this);
     return query.where(field, operator, value);
   }
+
+  /**
+   * Fetch collection docs
+   * @param {number} limit - Limit the firestore documents
+   */
+  async fetch(limit) {
+    const query = new Query(this);
+    return await query.fetch(limit);
+  }
+
+  /**
+   * Limit collection docs
+   * @param {number} limit - Limit the firestore documents
+   */
+  limit(number) {
+    const query = new Query(this);
+    return query.limit(number);
+  }
 }
 
 module.exports = Collection;

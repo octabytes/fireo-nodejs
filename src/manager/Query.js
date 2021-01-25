@@ -38,14 +38,59 @@ class Query {
   }
 
   /**
-   * Retrieve firestore document
+   * Limit firestore
+   * @param {number} number - Limit number of results
    */
-  async fetch() {
+  limit(number) {
+    this.__limit = number;
+    return this;
+  }
+
+  /**
+   * Order the document
+   * @param {string} field - field name
+   */
+  orderBy(field) {
+    if (field[0] === "-") {
+      this.__addDocOrder(this.__getFieldName(field.slice(1)), "desc");
+    } else {
+      this.__addDocOrder(this.__getFieldName(field, "asc"));
+    }
+
+    return this;
+  }
+  __addDocOrder(field, order) {
+    if (this.__order) {
+      this.__order.push({ name: field, order: order });
+    } else {
+      this.__order = [{ name: field, order: order }];
+    }
+  }
+
+  /**
+   * Retrieve firestore document
+   * @param {number} limit - Limit the number of firestore documents
+   */
+  async fetch(limit) {
     let ref = firestore.collection(this.__collection.__meta.collectionName);
 
     if (this.__filters) {
       for (const filter of this.__filters) {
         ref = ref.where(filter.name, filter.operator, filter.value);
+      }
+    }
+
+    if (this.__limit) {
+      ref = ref.limit(this.__limit);
+    }
+
+    if (limit) {
+      ref = ref.limit(limit);
+    }
+
+    if (this.__order) {
+      for (const order of this.__order) {
+        ref = ref.orderBy(order.name, order.order);
       }
     }
 
@@ -63,6 +108,13 @@ class Query {
     });
 
     return modelList;
+  }
+
+  /**
+   * Get query first document
+   */
+  async get() {
+    return (await this.fetch(1))[0];
   }
 }
 

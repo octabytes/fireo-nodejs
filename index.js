@@ -17,7 +17,9 @@ const main = async () => {
   // user2.age = 2;
   // await user2.save();
 
-  await User.collection.where("name", "==", "string").fetch();
+  //await User.collection.where("name", "==", "string").fetch();
+  const docs = await User.collection.where("name", "==", "name1").fetch();
+  console.log(docs);
 };
 
 main();

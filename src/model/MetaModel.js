@@ -98,7 +98,10 @@ class MetaModel {
 
   /**
    * Set values to model object
-   * @param {Object{data, id, key}} result - Firestore document result
+   * @param {Object} result - Document result
+   * @param {Object} result.data - Document data
+   * @param {string} result.id - Document ID
+   * @param {string} result.key - Document key
    */
   __setFieldsValue(result = { data, id, key }) {
     for (const [propertyName, field] of Object.entries(this.__meta.fields)) {
