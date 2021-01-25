@@ -24,6 +24,15 @@ describe("Sub Collection", () => {
     expect(doc.city).to.equal("city");
   });
   it("should able to save and get data with custom `id`", async () => {
+    class User extends Model {
+      id = Field.ID();
+      name = Fields.Text();
+    }
+    class Address extends Model {
+      id = Field.ID();
+      city = Fields.Text();
+    }
+
     const user = User.init();
     user.id = "custom-id-field";
     user.name = "string";
@@ -36,5 +45,19 @@ describe("Sub Collection", () => {
 
     const doc = await Address.collection.get({ key: address.key });
     expect(doc.city).to.equal("city");
+  });
+  it("should able to delete sub document", async () => {
+    const user = User.init();
+    user.name = "string";
+    await user.save();
+
+    const address = Address.init({ parent: user.key });
+    address.city = "city";
+    await address.save();
+
+    await address.delete();
+
+    const doc = await User.collection.get({ key: user.key });
+    expect(doc.name).to.equal("string");
   });
 });

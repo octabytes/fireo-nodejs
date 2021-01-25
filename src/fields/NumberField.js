@@ -13,7 +13,7 @@ class NumberField extends BaseField {
   setValue(value) {
     if (typeof value != "number") {
       throw new InvalidFieldType(
-        `NumberField only accept number value, invalid value provided ${value} in model ${this.modelName}`
+        `${this.originalName} only accept number value, invalid value provided ${value} in model ${this.modelName}`
       );
     }
 

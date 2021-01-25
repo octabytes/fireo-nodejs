@@ -14,6 +14,14 @@ describe("Meta Model", () => {
     const user = User.init();
     expect(user.__meta.collectionName).to.be.equal("User");
   });
+  it("should keep the record of Model Name", () => {
+    class User extends Model {
+      name = Field.Text();
+    }
+
+    const user = User.init();
+    expect(user.__meta.modelName).to.be.equal("User");
+  });
 
   describe("Model -> fields", () => {
     class User extends Model {

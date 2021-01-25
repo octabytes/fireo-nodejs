@@ -18,6 +18,7 @@ class MetaModel {
     this.__meta.parent = config.parent;
     this.__meta.isInstantiate = true;
     this.__meta.collectionName = this.constructor.name;
+    this.__meta.modelName = this.constructor.name;
     this.__getFields();
   }
 

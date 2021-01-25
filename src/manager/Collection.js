@@ -1,5 +1,6 @@
 const { DocumentNotFound } = require("../../errors");
 const BaseManager = require("./BaseManager");
+const Query = require("./Query");
 
 /**
  * Operate firestore static operations i.e get, query etc
@@ -54,6 +55,17 @@ class Collection extends BaseManager {
   async delete(by = { id, key }) {
     const docRef = this.__createDocRef(by);
     await docRef.delete();
+  }
+
+  /**
+   * Filter firestore document
+   * @param {string} field - Name of the field
+   * @param {string} operator - Firestore operator
+   * @param {string} value - value to search
+   */
+  where(field, operator, value) {
+    const query = new Query(this);
+    return query.where(field, operator, value);
   }
 }
 

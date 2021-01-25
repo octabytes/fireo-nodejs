@@ -3,23 +3,28 @@ const Field = require("./src/fields/Field");
 
 class User extends Model {
   name = Field.Text();
+  age = Field.Number();
 }
 
 const main = async () => {
   // const user = User.init();
   // user.name = "string";
+  // user.age = 1;
   // await user.save();
 
-  // console.log(user.id);
+  // const user2 = User.init();
+  // user2.name = "string";
+  // user2.age = 2;
+  // await user2.save();
 
-  const doc = await User.collection.get({ id: "fwP6fPtG7nal0CmiOWy2" });
-  console.log(doc);
+  await User.collection.where("name", "==", "string").fetch();
 };
 
-//main();
+main();
 
-function test(by = { id: undefined, key: undefined }) {
-  console.log("test function");
-}
+// const obj = User.collection.where("", "", "");
+// console.log(obj);
 
-test();
+// const user = User.init();
+// const user2 = user.constructor.init();
+// console.log(user2);
