@@ -2,7 +2,6 @@ const Chai = require("chai");
 const Model = require("../src/model/Model");
 const Fields = require("../src/fields/Field");
 const Field = require("../src/fields/Field");
-const { DocumentNotFound } = require("../errors");
 
 const expect = Chai.expect;
 
@@ -40,8 +39,8 @@ describe("Query", () => {
 
   it("should able to filter", async () => {
     const docs = await User.collection.where("name", "==", "name1").fetch();
-    expect(docs.length).to.greaterThan(0);
-    for (const doc of docs) {
+    expect(docs.list.length).to.greaterThan(0);
+    for (const doc of docs.list) {
       expect(doc.name).to.equal("name1");
     }
   });
@@ -51,8 +50,8 @@ describe("Query", () => {
       .where("name", "==", "name2")
       .where("age", "==", 1)
       .fetch();
-    expect(docs.length).to.greaterThan(0);
-    for (const doc of docs) {
+    expect(docs.list.length).to.greaterThan(0);
+    for (const doc of docs.list) {
       expect(doc.name).to.equal("name2");
       expect(doc.age).to.equal(1);
     }
@@ -62,8 +61,8 @@ describe("Query", () => {
     const docs = await User.collection
       .where("address", "==", "address1")
       .fetch();
-    expect(docs.length).to.greaterThan(0);
-    for (const doc of docs) {
+    expect(docs.list.length).to.greaterThan(0);
+    for (const doc of docs.list) {
       expect(doc.address).to.equal("address1");
     }
   });
@@ -75,45 +74,45 @@ describe("Query", () => {
 
   it("should able to fetch all documents", async () => {
     const docs = await User.collection.fetch();
-    expect(docs.length).to.greaterThan(2);
+    expect(docs.list.length).to.greaterThan(2);
   });
 
   it("should able to fetch limited documents", async () => {
     const docs = await User.collection.fetch(2);
-    expect(docs.length).to.equal(2);
+    expect(docs.list.length).to.equal(2);
   });
 
   it("should able to limit data", async () => {
     const docs = await User.collection.limit(1).fetch();
-    expect(docs.length).to.equal(1);
-    expect(docs[0].key).to.be.not.undefined;
+    expect(docs.list.length).to.equal(1);
+    expect(docs.list[0].key).to.be.not.undefined;
   });
   it("should able to limit data in fetch", async () => {
     const docs = await User.collection.fetch(1);
-    expect(docs.length).to.equal(1);
-    expect(docs[0].key).to.be.not.undefined;
+    expect(docs.list.length).to.equal(1);
+    expect(docs.list[0].key).to.be.not.undefined;
   });
   it("should able to order the collection", async () => {
     const docs = await User.collection.orderBy("age").fetch(1);
-    expect(docs.length).to.greaterThan(0);
+    expect(docs.list.length).to.greaterThan(0);
     let previousAge = 0;
-    for (const doc of docs) {
+    for (const doc of docs.list) {
       expect(doc.age).to.gte(previousAge);
       previousAge = doc.age;
     }
   });
   it("should return the empty array", async () => {
     const docs = await User.collection.where("name", "==", "not-exist").fetch();
-    expect(docs.length).to.equal(0);
+    expect(docs.list.length).to.equal(0);
   });
   it("should order the results", async () => {
     const docs = await User.collection
       .where("age", "==", 1)
       .orderBy("age")
       .fetch();
-    expect(docs.length).to.greaterThan(0);
+    expect(docs.list.length).to.greaterThan(0);
     let previousAge = 0;
-    for (const doc of docs) {
+    for (const doc of docs.list) {
       expect(doc.age).to.gte(previousAge);
       previousAge = doc.age;
     }
@@ -123,9 +122,9 @@ describe("Query", () => {
       .where("age", "==", 1)
       .orderBy("-age")
       .fetch();
-    expect(docs.length).to.greaterThan(0);
+    expect(docs.list.length).to.greaterThan(0);
     let previousAge = 3;
-    for (const doc of docs) {
+    for (const doc of docs.list) {
       expect(doc.age).to.lte(previousAge);
       previousAge = doc.age;
     }
@@ -142,12 +141,63 @@ describe("Query", () => {
     }
 
     const firstList = await UserOffset.collection.orderBy("age").fetch(3);
-    const lastQueryAge = firstList[2].age;
+    const lastQueryAge = firstList.list[2].age;
 
     const secondList = await UserOffset.collection
       .orderBy("age")
       .offset(3)
       .fetch(3);
-    expect(secondList[1].age).to.greaterThan(lastQueryAge);
+    expect(secondList.list[1].age).to.greaterThan(lastQueryAge);
+  });
+
+  describe("Cursor", () => {
+    class UserCursor extends Model {
+      name = Field.Text();
+      age = Field.Number();
+      address = Field.Text({ name: "location" });
+    }
+
+    before(() => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          for (let i = 1; i < 10; i++) {
+            const u = UserCursor.init();
+            u.name = "name" + i;
+            u.address = "address";
+            u.age = new Date().getTime();
+            u.save();
+          }
+
+          resolve();
+        }, 200);
+      });
+    });
+
+    it("should able to create query cursor", async () => {
+      const query = await UserCursor.collection
+        .where("address", "==", "address")
+        .orderBy("age")
+        .limit(3)
+        .fetch();
+      expect(query.cursor).to.be.not.undefined;
+
+      const nextQuery = await UserCursor.collection
+        .cursor(query.cursor)
+        .fetch();
+      expect(nextQuery.list.length).to.equal(3);
+    });
+
+    it("should able to modify the limit of query cursor", async () => {
+      const query = await UserCursor.collection
+        .where("address", "==", "address")
+        .orderBy("age")
+        .limit(3)
+        .fetch();
+
+      const nextQuery = await UserCursor.collection
+        .cursor(query.cursor)
+        .fetch(4);
+      expect(nextQuery.list.length).to.equal(4);
+    });
   });
 });

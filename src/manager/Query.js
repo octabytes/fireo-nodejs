@@ -9,6 +9,7 @@ class Query {
    */
   constructor(collection) {
     this.__collection = collection;
+    this.__queryParameters = {};
   }
 
   /**
@@ -28,10 +29,10 @@ class Query {
   where(field, operator, value) {
     const fieldName = this.__getFieldName(field);
 
-    if (this.__filters) {
-      this.__filters.push({ name: fieldName, operator, value });
+    if (this.__queryParameters.filters) {
+      this.__queryParameters.filters.push({ name: fieldName, operator, value });
     } else {
-      this.__filters = [{ name: fieldName, operator, value }];
+      this.__queryParameters.filters = [{ name: fieldName, operator, value }];
     }
 
     return this;
@@ -42,7 +43,7 @@ class Query {
    * @param {number} number - Limit number of results
    */
   limit(number) {
-    this.__limit = number;
+    this.__queryParameters.limit = number;
     return this;
   }
 
@@ -60,10 +61,10 @@ class Query {
     return this;
   }
   __addDocOrder(field, order) {
-    if (this.__order) {
-      this.__order.push({ name: field, order: order });
+    if (this.__queryParameters.order) {
+      this.__queryParameters.order.push({ name: field, order: order });
     } else {
-      this.__order = [{ name: field, order: order }];
+      this.__queryParameters.order = [{ name: field, order: order }];
     }
   }
 
@@ -72,7 +73,17 @@ class Query {
    * @param {number} number - Starting number
    */
   offset(number) {
-    this.__offset = number;
+    this.__queryParameters.offset = number;
+    return this;
+  }
+
+  /**
+   * Create query from cursor
+   * @param {string} queryCursor - Query cursor
+   */
+  cursor(queryCursor) {
+    const c = this.__decodeCursor(queryCursor);
+    this.__queryParameters = JSON.parse(c);
     return this;
   }
 
@@ -83,28 +94,29 @@ class Query {
   async fetch(limit) {
     let ref = firestore.collection(this.__collection.__meta.collectionName);
 
-    if (this.__filters) {
-      for (const filter of this.__filters) {
+    if (this.__queryParameters.filters) {
+      for (const filter of this.__queryParameters.filters) {
         ref = ref.where(filter.name, filter.operator, filter.value);
       }
     }
 
-    if (this.__limit) {
-      ref = ref.limit(this.__limit);
+    if (this.__queryParameters.limit) {
+      ref = ref.limit(this.__queryParameters.limit);
     }
 
     if (limit) {
+      this.__queryParameters.limit = limit;
       ref = ref.limit(limit);
     }
 
-    if (this.__order) {
-      for (const order of this.__order) {
+    if (this.__queryParameters.order) {
+      for (const order of this.__queryParameters.order) {
         ref = ref.orderBy(order.name, order.order);
       }
     }
 
-    if (this.__offset) {
-      ref = ref.offset(this.__offset);
+    if (this.__queryParameters.offset) {
+      ref = ref.offset(this.__queryParameters.offset);
     }
 
     const docs = await ref.get();
@@ -120,14 +132,27 @@ class Query {
       modelList.push(model);
     });
 
-    return modelList;
+    return {
+      cursor: this.__encodeCursor(JSON.stringify(this.__queryParameters)),
+      list: modelList,
+    };
+  }
+
+  __encodeCursor(cursor) {
+    const buffer = Buffer.from(cursor, "utf8");
+    return buffer.toString("base64");
+  }
+
+  __decodeCursor(cursor) {
+    const buffer = Buffer.from(cursor, "base64");
+    return buffer.toString("utf8");
   }
 
   /**
    * Get query first document
    */
   async get() {
-    return (await this.fetch(1))[0];
+    return (await this.fetch(1)).list[0];
   }
 }
 

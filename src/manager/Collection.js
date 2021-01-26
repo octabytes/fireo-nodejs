@@ -94,6 +94,15 @@ class Collection extends BaseManager {
     const query = new Query(this);
     return query.orderBy(field);
   }
+
+  /**
+   * Create query from cursor
+   * @param {string} queryCursor - Query cursor
+   */
+  cursor(queryCursor) {
+    const query = new Query(this);
+    return query.cursor(queryCursor);
+  }
 }
 
 module.exports = Collection;
