@@ -85,6 +85,15 @@ class Collection extends BaseManager {
     const query = new Query(this);
     return query.limit(number);
   }
+
+  /**
+   * Order the document
+   * @param {string} field - field name
+   */
+  orderBy(field) {
+    const query = new Query(this);
+    return query.orderBy(field);
+  }
 }
 
 module.exports = Collection;

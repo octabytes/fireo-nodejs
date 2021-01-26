@@ -69,7 +69,7 @@ class MetaModel {
 
     for (const [propertyName, field] of Object.entries(this.__meta.fields)) {
       const value = this[propertyName];
-      if (value) {
+      if (value !== undefined) {
         field.setValue(this[propertyName]);
         this.__meta.parseFields[field.name] = field.getValue;
       }

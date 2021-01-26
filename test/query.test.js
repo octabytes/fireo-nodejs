@@ -93,6 +93,15 @@ describe("Query", () => {
     expect(docs.length).to.equal(1);
     expect(docs[0].key).to.be.not.undefined;
   });
+  it("should able to order the collection", async () => {
+    const docs = await User.collection.orderBy("age").fetch(1);
+    expect(docs.length).to.greaterThan(0);
+    let previousAge = 0;
+    for (const doc of docs) {
+      expect(doc.age).to.gte(previousAge);
+      previousAge = doc.age;
+    }
+  });
   it("should return the empty array", async () => {
     const docs = await User.collection.where("name", "==", "not-exist").fetch();
     expect(docs.length).to.equal(0);
@@ -120,5 +129,25 @@ describe("Query", () => {
       expect(doc.age).to.lte(previousAge);
       previousAge = doc.age;
     }
+  });
+
+  it("should able to offset data", async () => {
+    class UserOffset extends Model {
+      age = Field.Number();
+    }
+    for (let i = 1; i < 10; i++) {
+      const u = UserOffset.init();
+      u.age = new Date().getTime();
+      await u.save();
+    }
+
+    const firstList = await UserOffset.collection.orderBy("age").fetch(3);
+    const lastQueryAge = firstList[2].age;
+
+    const secondList = await UserOffset.collection
+      .orderBy("age")
+      .offset(3)
+      .fetch(3);
+    expect(secondList[1].age).to.greaterThan(lastQueryAge);
   });
 });

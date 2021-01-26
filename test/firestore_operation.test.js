@@ -94,6 +94,21 @@ describe("Firestore Operation", () => {
 
       expect(user.key).to.be.not.undefined;
     });
+
+    it("should able to save zero in Number Field", async () => {
+      class User extends Model {
+        name = Field.Text();
+        age = Field.Number();
+      }
+      const user = User.init();
+      user.name = "string";
+      user.age = 0;
+      await user.save();
+
+      const doc = await User.collection.get({ key: user.key });
+      expect(doc.name).to.equal("string");
+      expect(doc.age).to.equal(0);
+    });
   });
 
   //#################################

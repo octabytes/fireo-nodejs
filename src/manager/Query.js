@@ -68,6 +68,15 @@ class Query {
   }
 
   /**
+   * Set firestore offset
+   * @param {number} number - Starting number
+   */
+  offset(number) {
+    this.__offset = number;
+    return this;
+  }
+
+  /**
    * Retrieve firestore document
    * @param {number} limit - Limit the number of firestore documents
    */
@@ -92,6 +101,10 @@ class Query {
       for (const order of this.__order) {
         ref = ref.orderBy(order.name, order.order);
       }
+    }
+
+    if (this.__offset) {
+      ref = ref.offset(this.__offset);
     }
 
     const docs = await ref.get();
