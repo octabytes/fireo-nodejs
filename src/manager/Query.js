@@ -110,6 +110,20 @@ class Query {
   }
 
   /**
+   * Delete documents by query
+   * @param {boolean} child - Delete child docs and collections
+   */
+  async delete(child) {
+    const result = await this.fetch();
+    const docRefs = [];
+    for (let doc of result.list) {
+      docRefs.push(doc.__meta.extra.ref);
+    }
+
+    await this.__collection.__deleteCollectionDocs(docRefs, child);
+  }
+
+  /**
    * Retrieve firestore document
    * @param {number} limit - Limit the number of firestore documents
    */
@@ -160,6 +174,9 @@ class Query {
         data: doc.data(),
         id: doc.id,
         key: this.__collection.__extractKeyFromDocRef(doc._ref),
+        extra: {
+          ref: doc._ref,
+        },
       });
       modelList.push(model);
     });

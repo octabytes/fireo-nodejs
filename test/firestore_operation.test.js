@@ -397,5 +397,17 @@ describe("Firestore Operation", () => {
         DocumentNotFound
       );
     });
+
+    it("should delete the docs by query", async () => {
+      const user = User.init();
+      user.name = "by-query";
+      await user.save();
+
+      await User.collection.where("name", "==", "by-query").delete();
+
+      await expect(User.collection.get({ key: user.key })).to.rejectedWith(
+        DocumentNotFound
+      );
+    });
   });
 });
