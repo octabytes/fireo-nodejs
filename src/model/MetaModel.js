@@ -15,11 +15,17 @@ class MetaModel {
    * @param {string} config.parent - Parent document key
    */
   __configure(config = { parent: undefined }) {
+    this.__meta.config = this.constructor.config || {};
     this.__meta.parent = config.parent;
     this.__meta.isInstantiate = true;
-    this.__meta.collectionName = this.constructor.name;
     this.__meta.modelName = this.constructor.name;
     this.__getFields();
+    this.__setCollectionName();
+  }
+
+  __setCollectionName() {
+    this.__meta.collectionName =
+      this.__meta.config.collectionName || this.constructor.name;
   }
 
   /**
@@ -54,6 +60,7 @@ class MetaModel {
         field.configure({
           modelName: this.constructor.name,
           originalName: propertyName,
+          toLowercase: this.__meta.config.toLowercase,
         });
         this.__meta.fields[propertyName] = field;
         this[propertyName] = undefined;

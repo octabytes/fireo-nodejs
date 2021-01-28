@@ -5,6 +5,13 @@ const { InvalidFieldType } = require("../../errors");
  * @extends BaseField
  */
 class TextField extends BaseField {
+  // Custom options for this field
+  static fieldOptions = ["toLowercase"];
+
+  option_toLowercase({ optionValue, fieldValue }) {
+    return optionValue ? fieldValue.toLowerCase() : fieldValue;
+  }
+
   /**
    * Set TextField Value
    * @override

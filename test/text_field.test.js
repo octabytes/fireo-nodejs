@@ -41,4 +41,25 @@ describe("TextField", () => {
       expect(textField.getValue).to.equal("string");
     });
   });
+
+  describe("Custom Options", () => {
+    it("should support toLowercase", () => {
+      const textField = Field.Text({ toLowercase: true });
+      textField.setValue("STRING");
+      expect(textField.getValue).to.equal("string");
+    });
+    it("should not toLowercase when option is `false`", () => {
+      const textField = Field.Text({ toLowercase: false });
+      textField.setValue("STRING");
+      expect(textField.getValue).to.equal("STRING");
+    });
+    it("Other options does not effect on custom options", () => {
+      const textField = Field.Text({
+        toLowercase: true,
+        optionNotExist: false,
+      });
+      textField.setValue("STRING");
+      expect(textField.getValue).to.equal("string");
+    });
+  });
 });

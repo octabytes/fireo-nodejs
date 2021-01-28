@@ -13,9 +13,17 @@ class BaseField {
     this.val;
     this.modelName;
     this.originalName;
+    this.toLowercase;
     this.required = options.required;
     this.default = options.default;
     this.customName = options.name;
+
+    if (this.constructor.fieldOptions) {
+      this.customOptions = {};
+      for (const option of this.constructor.fieldOptions) {
+        this.customOptions[option] = options[option];
+      }
+    }
   }
 
   /**
@@ -23,9 +31,10 @@ class BaseField {
    * @param {string} modelName - Model name
    * @param {string} originalName - Field original name
    */
-  configure(options = { modelName, originalName }) {
+  configure(options = { modelName, originalName, toLowercase }) {
     this.modelName = options.modelName;
     this.originalName = options.originalName;
+    this.toLowercase = options.toLowercase;
   }
 
   /**
@@ -68,6 +77,23 @@ class BaseField {
         `Field ${this.originalName} is required in Model ${this.modelName}, 
         assign value or set default for ${this.originalName} field.`
       );
+    }
+
+    // Check if custom options are set for this field
+    if (this.customOptions) {
+      for (const [option, value] of Object.entries(this.customOptions)) {
+        fv = this["option_" + option]({
+          optionValue: value,
+          fieldValue: fv,
+        });
+      }
+    }
+
+    // Check if model config set to lowercase
+    if (this.toLowercase) {
+      if (this.constructor.fieldOptions.includes("toLowercase")) {
+        fv = this["option_toLowercase"]({ optionValue: true, fieldValue: fv });
+      }
     }
 
     return fv;

@@ -23,6 +23,31 @@ describe("Meta Model", () => {
     expect(user.__meta.modelName).to.be.equal("User");
   });
 
+  describe("Config", () => {
+    class User extends Model {
+      name = Field.Text();
+    }
+
+    it("should able to set custom collection name", () => {
+      User.config = {
+        collectionName: "custom_collection",
+      };
+
+      const user = User.init();
+      expect(user.__meta.collectionName).to.equal("custom_collection");
+    });
+
+    it("should able to contain the config object", () => {
+      User.config = {
+        collectionName: "custom_collection",
+        toLowercase: true,
+      };
+
+      const user = User.init();
+      expect(user.__meta.config).to.equal(User.config);
+    });
+  });
+
   describe("Model -> fields", () => {
     class User extends Model {
       name = Field.Text();

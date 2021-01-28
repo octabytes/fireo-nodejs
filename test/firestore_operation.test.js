@@ -3,7 +3,6 @@ const chaiAsPromised = require("chai-as-promised");
 const Model = require("../src/model/Model");
 const Field = require("../src/fields/Field");
 const { EmptyDocument, DocumentNotFound, KeyNotExist } = require("../errors");
-const { use } = require("chai");
 
 const expect = Chai.expect;
 Chai.use(chaiAsPromised);
@@ -324,6 +323,77 @@ describe("Firestore Operation", () => {
       await User.collection.delete({ id: user.id });
 
       await expect(User.collection.get({ key: user.key })).to.be.rejectedWith(
+        DocumentNotFound
+      );
+    });
+
+    it("should delete all child documents", async () => {
+      class User extends Model {
+        name = Field.Text();
+      }
+      class Address extends Model {
+        location = Field.Text();
+      }
+
+      const user = User.init();
+      user.name = "string";
+      await user.save();
+
+      const address = Address.init({ parent: user.key });
+      address.location = "user-location";
+      await address.save();
+
+      await User.collection.delete({ key: user.key, child: true });
+
+      await expect(
+        Address.collection.get({ key: address.key })
+      ).to.be.rejectedWith(DocumentNotFound);
+      await expect(User.collection.get({ key: user.key })).to.be.rejectedWith(
+        DocumentNotFound
+      );
+    });
+
+    it("delete entire collection", async () => {
+      class City extends Model {
+        name = Field.Text();
+      }
+      const city = City.init();
+      city.name = "city1";
+      await city.save();
+
+      const city2 = City.init();
+      city2.name = "city2";
+      await city2.save();
+
+      await City.collection.delete();
+
+      const doc = await City.collection.fetch(1);
+      expect(doc.list.length).to.equal(0);
+    });
+
+    it("delete entire collection and its child", async () => {
+      class Parent extends Model {
+        name = Field.Text();
+      }
+
+      class Child extends Model {
+        name = Field.Text();
+      }
+
+      const p = Parent.init();
+      p.name = "string";
+      await p.save();
+
+      const c = Child.init({ parent: p.key });
+      c.name = "string";
+      await c.save();
+
+      await Parent.collection.delete({ child: true });
+
+      await expect(Parent.collection.get({ key: p.key })).to.rejectedWith(
+        DocumentNotFound
+      );
+      await expect(Child.collection.get({ key: c.key })).to.rejectedWith(
         DocumentNotFound
       );
     });

@@ -10,7 +10,12 @@ class Field {
     return new IDField();
   }
   static Text(
-    options = { required: false, default: undefined, name: undefined }
+    options = {
+      required: false,
+      default: undefined,
+      name: undefined,
+      toLowercase: undefined,
+    }
   ) {
     return new TextField(options);
   }

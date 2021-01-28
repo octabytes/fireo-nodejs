@@ -28,11 +28,24 @@ class Query {
    */
   where(field, operator, value) {
     const fieldName = this.__getFieldName(field);
+    let v = value;
+
+    if (this.__collection.__meta.config.toLowercase) {
+      try {
+        v = value.toLowerCase();
+      } catch (e) {}
+    }
 
     if (this.__queryParameters.filters) {
-      this.__queryParameters.filters.push({ name: fieldName, operator, value });
+      this.__queryParameters.filters.push({
+        name: fieldName,
+        operator,
+        value: v,
+      });
     } else {
-      this.__queryParameters.filters = [{ name: fieldName, operator, value }];
+      this.__queryParameters.filters = [
+        { name: fieldName, operator, value: v },
+      ];
     }
 
     return this;
@@ -88,11 +101,30 @@ class Query {
   }
 
   /**
+   * Set parent key
+   * @param {string} key - Key of parent document
+   */
+  parent(key) {
+    this.__queryParameters.parent = key;
+    return this;
+  }
+
+  /**
    * Retrieve firestore document
    * @param {number} limit - Limit the number of firestore documents
    */
   async fetch(limit) {
-    let ref = firestore.collection(this.__collection.__meta.collectionName);
+    let ref;
+
+    if (this.__queryParameters.parent) {
+      ref = firestore.collection(
+        this.__queryParameters.parent +
+          "/" +
+          this.__collection.__meta.collectionName
+      );
+    } else {
+      ref = firestore.collection(this.__collection.__meta.collectionName);
+    }
 
     if (this.__queryParameters.filters) {
       for (const filter of this.__queryParameters.filters) {

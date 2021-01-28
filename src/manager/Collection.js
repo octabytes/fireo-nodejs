@@ -1,6 +1,7 @@
 const { DocumentNotFound } = require("../../errors");
 const BaseManager = require("./BaseManager");
 const Query = require("./Query");
+const firestore = require("../../Firestore");
 
 /**
  * Operate firestore static operations i.e get, query etc
@@ -51,10 +52,55 @@ class Collection extends BaseManager {
    * @param {Object} by - Document id or key
    * @param {string} by.id - Document id
    * @param {string} by.key - Document key
+   * @param {boolean} by.child - Delete also child documents
    */
-  async delete(by = { id, key }) {
-    const docRef = this.__createDocRef(by);
-    await docRef.delete();
+  async delete(by = { id: undefined, key: undefined, child: undefined }) {
+    if (by.id || by.key) {
+      const ref = this.__createDocRef(by);
+
+      if (by.child) {
+        await this.__deleteCollectionDocs([ref], true);
+      } else {
+        await ref.delete();
+      }
+    } else {
+      const ref = firestore.collection(this.__meta.collectionName);
+      const docs = await ref.listDocuments();
+      await this.__deleteCollectionDocs(docs, by.child);
+    }
+  }
+
+  /**
+   * Delete collection docs
+   * @param {Array} docList - List of doc ref
+   * @param {boolean} child - Delete nested child collection docs
+   */
+  async __deleteCollectionDocs(docList, child) {
+    let batchSize = 0;
+    const batch = firestore.batch();
+    for (let doc of docList) {
+      if (child) {
+        const docCollections = await doc.listCollections();
+        if (docCollections.length) {
+          for (let collection of docCollections) {
+            await this.__deleteCollectionDocs(
+              await collection.listDocuments(),
+              child
+            );
+          }
+        }
+      }
+
+      batch.delete(doc);
+      batchSize++;
+      if (batchSize >= 300) {
+        await batch.commit();
+        await this.__deleteCollectionDocs(docList.slice(batchSize), child);
+        return;
+      }
+    }
+
+    await batch.commit();
   }
 
   /**
@@ -102,6 +148,15 @@ class Collection extends BaseManager {
   cursor(queryCursor) {
     const query = new Query(this);
     return query.cursor(queryCursor);
+  }
+
+  /**
+   * Set parent key
+   * @param {string} key - Key of parent document
+   */
+  parent(key) {
+    const query = new Query(this);
+    return query.parent(key);
   }
 }
 

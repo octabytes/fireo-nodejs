@@ -199,5 +199,28 @@ describe("Query", () => {
         .fetch(4);
       expect(nextQuery.list.length).to.equal(4);
     });
+
+    it("should able to query in child collections", async () => {
+      class User extends Model {
+        name = Field.Text();
+      }
+      class Address extends Model {
+        location = Field.Text();
+      }
+
+      const user = User.init();
+      user.name = "string";
+      await user.save();
+
+      const address = Address.init({ parent: user.key });
+      address.location = "user-location";
+      await address.save();
+
+      const doc = await Address.collection
+        .parent(user.key)
+        .where("location", "==", "user-location")
+        .fetch(1);
+      expect(doc.list[0].location).to.equal("user-location");
+    });
   });
 });

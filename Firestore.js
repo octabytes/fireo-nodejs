@@ -16,7 +16,7 @@ class Firestore {
    */
   get conn() {
     if (!this.connection) {
-      this.connection = new CloudFirestore({ projectId: "birddog-trackers" });
+      this.connection = new CloudFirestore({ projectId: "true-islam-dev" });
     }
 
     return this.connection;
