@@ -42,9 +42,10 @@ class Model extends MetaModel {
    * @param {Object} options - Options for save docu
    * @param {boolean} options.merge - Merge the fields with existing document or create
    * @param {Transaction} options.transaction - Firestore transaction
+   * @param {Batch} options.batch - Firestore batch
    * new document if it already not exist
    */
-  async save({ merge = false, transaction } = {}) {
+  async save({ merge = false, transaction, batch } = {}) {
     this.__parseField();
 
     // Check if document id not empty
@@ -55,7 +56,11 @@ class Model extends MetaModel {
     }
 
     const manager = new Manager(this.__meta);
-    const { id, key } = await manager.save({ merge, transaction });
+    const transOrBatch = transaction || batch;
+    const { id, key } = await manager.save({
+      merge,
+      transaction: transOrBatch,
+    });
     this.__setIdAndKey(id, key);
   }
 
@@ -64,9 +69,10 @@ class Model extends MetaModel {
    * new document if it already not exist
    * @param {Object} options - Options
    * @param {Transaction} options.transaction - Firestore transaction
+   * @param {Batch} options.batch - Firestore batch
    */
-  async upsert({ transaction } = {}) {
-    await this.save({ merge: true, transaction });
+  async upsert({ transaction, batch } = {}) {
+    await this.save({ merge: true, transaction, batch });
   }
 
   /**
@@ -75,8 +81,9 @@ class Model extends MetaModel {
    * @param {string} options.id - document id
    * @param {string} options.key - document key
    * @param {Transaction} options.transaction - Firestore transaction
+   * @param {Batch} options.batch - Firestore batch
    */
-  async update({ id = undefined, key = undefined, transaction } = {}) {
+  async update({ id = undefined, key = undefined, transaction, batch } = {}) {
     let result;
     this.__parseField();
     const manager = new Manager(this.__meta);
@@ -90,7 +97,8 @@ class Model extends MetaModel {
 
       result = await manager.update({ key: this.key });
     } else {
-      result = await manager.update({ id, key, transaction });
+      const transOrBatch = transaction || batch;
+      result = await manager.update({ id, key, transaction: transOrBatch });
     }
     this.__setIdAndKey(result.id, result.key);
   }
@@ -99,14 +107,16 @@ class Model extends MetaModel {
    * Delete document from firestore
    * @param {Object} options - Delete options
    * @param {Transaction} options.transaction - Firestore transaction
+   * @param {Batch} options.batch - Firestore batch
    */
-  async delete({ transaction } = {}) {
+  async delete({ transaction, batch } = {}) {
     if (!this.key) {
       throw new KeyNotExist(`No key exist in Model ${this.constructor.name}`);
     }
 
     const manager = new Manager(this.__meta);
-    await manager.delete({ key: this.key, transaction });
+    const transOrBatch = transaction || batch;
+    await manager.delete({ key: this.key, transaction: transOrBatch });
   }
 
   /**
