@@ -39,11 +39,12 @@ class Model extends MetaModel {
 
   /**
    * Save model into firestore document
-   * @param {Object} options - Save options
+   * @param {Object} options - Options for save docu
    * @param {boolean} options.merge - Merge the fields with existing document or create
+   * @param {Transaction} options.transaction - Firestore transaction
    * new document if it already not exist
    */
-  async save(options = { merge: false }) {
+  async save({ merge = false, transaction } = {}) {
     this.__parseField();
 
     // Check if document id not empty
@@ -54,30 +55,33 @@ class Model extends MetaModel {
     }
 
     const manager = new Manager(this.__meta);
-    const { id, key } = await manager.save(options);
+    const { id, key } = await manager.save({ merge, transaction });
     this.__setIdAndKey(id, key);
   }
 
   /**
    * Merge the fields with existing document or create
    * new document if it already not exist
+   * @param {Object} options - Options
+   * @param {Transaction} options.transaction - Firestore transaction
    */
-  async upsert() {
-    await this.save({ merge: true });
+  async upsert({ transaction } = {}) {
+    await this.save({ merge: true, transaction });
   }
 
   /**
    * Update existing firestore document
-   * @param {Object} by - Document id or key
-   * @param {string} by.id - document id
-   * @param {string} by.key - document key
+   * @param {Object} options - Update options
+   * @param {string} options.id - document id
+   * @param {string} options.key - document key
+   * @param {Transaction} options.transaction - Firestore transaction
    */
-  async update(by = { id: undefined, key: undefined }) {
+  async update({ id = undefined, key = undefined, transaction } = {}) {
     let result;
     this.__parseField();
     const manager = new Manager(this.__meta);
 
-    if (!by.id && !by.key) {
+    if (!id && !key) {
       if (!this.key) {
         throw new KeyNotExist(
           `No key exist in Model ${this.constructor.name}, provide id or key in update() method`
@@ -86,21 +90,23 @@ class Model extends MetaModel {
 
       result = await manager.update({ key: this.key });
     } else {
-      result = await manager.update(by);
+      result = await manager.update({ id, key, transaction });
     }
     this.__setIdAndKey(result.id, result.key);
   }
 
   /**
    * Delete document from firestore
+   * @param {Object} options - Delete options
+   * @param {Transaction} options.transaction - Firestore transaction
    */
-  async delete() {
+  async delete({ transaction } = {}) {
     if (!this.key) {
       throw new KeyNotExist(`No key exist in Model ${this.constructor.name}`);
     }
 
     const manager = new Manager(this.__meta);
-    await manager.delete(this.key);
+    await manager.delete({ key: this.key, transaction });
   }
 
   /**

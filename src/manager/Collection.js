@@ -21,20 +21,25 @@ class Collection extends BaseManager {
 
   /**
    * Get firestore document
-   * @param {Object} by - Document id or key
-   * @param {string} by.id - Document id
-   * @param {string} by.key - Document key
+   * @param {Object} options - Document id, key and transaction
+   * @param {string} options.id - Document id
+   * @param {string} options.key - Document key
    */
-  async get(by = { id, key }) {
-    const docRef = this.__createDocRef(by);
+  async get({ id, key, transaction } = {}) {
+    const docRef = this.__createDocRef({ id, key });
 
-    const snapshot = await docRef.get();
+    let snapshot;
+    if (transaction) {
+      snapshot = await transaction.get(docRef);
+    } else {
+      snapshot = await docRef.get();
+    }
 
     if (!snapshot.exists) {
       throw new DocumentNotFound(
         `Document not found in collection ${
           this.__meta.collectionName
-        } against ${by.id || by.key}`
+        } against ${id || key}`
       );
     }
 
