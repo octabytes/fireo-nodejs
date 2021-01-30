@@ -17,6 +17,4 @@ module.exports = {
 // TODO
 // other fields array, geo point etc
 // Reference field
-// Transactions and batch
 // array union, increment, server time
-// fromObject and toObject

@@ -27,6 +27,16 @@ class Model extends MetaModel {
   }
 
   /**
+   * Create model from parent key
+   * @param {string} key - Parent document key
+   */
+  static parent(key) {
+    const obj = new this(true);
+    obj.__configure({ parent: key });
+    return obj;
+  }
+
+  /**
    * Instantiate Model
    * @param {Object} config - Model config
    * @param {string} config.parent - Parent document key
@@ -35,6 +45,45 @@ class Model extends MetaModel {
     const obj = new this(true);
     obj.__configure(config);
     return obj;
+  }
+
+  /**
+   * Static Create model instance from key value object
+   * @param {Object} map - Key value pair of model fields
+   */
+  static fromObject(map) {
+    const obj = new this(true);
+    obj.__configure();
+    const properties = obj.__getModelProperties;
+    for (const propertyName of properties) {
+      obj[propertyName] = map[propertyName];
+    }
+    return obj;
+  }
+
+  /**
+   * Create model instance from key value object
+   * @param {Object} map - Key value pair of model fields
+   */
+  fromObject(map) {
+    const properties = this.__getModelProperties;
+    for (const propertyName of properties) {
+      this[propertyName] = map[propertyName];
+    }
+    return this;
+  }
+
+  /**
+   * Convert Model object into key value pair object
+   */
+  toObject() {
+    const map = {};
+    const properties = this.__getModelProperties;
+    for (const propertyName of properties) {
+      map[propertyName] = this[propertyName];
+    }
+
+    return map;
   }
 
   /**

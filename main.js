@@ -8,15 +8,17 @@ const main = async () => {
     name = Field.Text();
   }
 
-  const res = await Fireo.runTransaction(async (t) => {
-    const user = User.init();
-    user.name = "string";
-    await user.save();
+  class Emp {
+    static init() {
+      return new this();
+    }
 
-    return user.key;
-  });
+    init() {
+      console.log("asdads");
+    }
+  }
 
-  console.log(res);
+  const emp = Emp.init().init();
 };
 
 main();
