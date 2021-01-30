@@ -163,6 +163,15 @@ class Collection extends BaseManager {
     const query = new Query(this);
     return query.parent(key);
   }
+
+  /**
+   * Transaction
+   * @param {Transaction} t - Firestore transaction
+   */
+  transaction(t) {
+    const query = new Query(this);
+    return query.transaction(t);
+  }
 }
 
 module.exports = Collection;

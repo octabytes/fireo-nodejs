@@ -110,6 +110,15 @@ class Query {
   }
 
   /**
+   * Transaction
+   * @param {Transaction} t - Firestore transaction
+   */
+  transaction(t) {
+    this.__transaction = t;
+    return this;
+  }
+
+  /**
    * Delete documents by query
    * @param {boolean} child - Delete child docs and collections
    */
@@ -164,8 +173,13 @@ class Query {
     if (this.__queryParameters.offset) {
       ref = ref.offset(this.__queryParameters.offset);
     }
+    let docs;
+    if (this.__transaction) {
+      docs = await this.__transaction.get(ref);
+    } else {
+      docs = await ref.get();
+    }
 
-    const docs = await ref.get();
     const modelList = [];
 
     docs.forEach((doc) => {

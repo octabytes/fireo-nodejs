@@ -98,4 +98,42 @@ describe("Transactions", async () => {
       DocumentNotFound
     );
   });
+
+  describe("Query", () => {
+    class User extends Model {
+      name = Field.Text();
+    }
+
+    it("fetch", async () => {
+      const user = User.init();
+      user.name = "trans-name";
+      await user.save();
+
+      const docName = await Fireo.runTransaction(async (t) => {
+        const doc = await User.collection
+          .transaction(t)
+          .where("name", "==", "trans-name")
+          .get();
+
+        return doc.name;
+      });
+
+      expect(docName).to.equal("trans-name");
+    });
+    // it("Delete", async () => {
+    //   const user = User.init();
+    //   user.name = "trans-name-delete";
+    //   await user.save();
+
+    //   await Fireo.runTransaction(async (t) => {
+    //     await User.collection.transaction(t).
+    //       .where("name", "==", "trans-name-delete")
+    //       .delete();
+    //   });
+
+    //   await expect(User.collection.get({ key: user.key })).to.be.rejectedWith(
+    //     DocumentNotFound
+    //   );
+    // });
+  });
 });
