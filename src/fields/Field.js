@@ -3,6 +3,7 @@ const TextField = require("./TextField");
 const NumberField = require("./NumberField");
 const BooleanField = require("./BooleanField");
 const ListField = require("./ListField");
+const MapField = require("./MapField");
 
 /**
  * Possible Fireo Fields
@@ -38,6 +39,12 @@ class Field {
     options = { required: false, default: undefined, name: undefined }
   ) {
     return new ListField(options);
+  }
+
+  static Map(
+    options = { required: false, default: undefined, name: undefined }
+  ) {
+    return new MapField(options);
   }
 }
 
