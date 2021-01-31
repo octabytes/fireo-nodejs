@@ -59,6 +59,14 @@ class BaseField {
   }
 
   /**
+   * set db field value
+   * @param {any} value - value for the field
+   */
+  setDbValue(value) {
+    this.val = value;
+  }
+
+  /**
    * Get value
    */
   get getValue() {

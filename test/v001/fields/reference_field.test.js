@@ -1,7 +1,7 @@
 const chai = require("chai");
 const Model = require("../../../src/model/Model");
 const Field = require("../../../src/fields/Field");
-const { InvalidFieldType, RequiredField } = require("../../../errors");
+const { RequiredField } = require("../../../errors");
 const firestore = require("../../../Firestore");
 const { DocumentReference } = require("@google-cloud/firestore");
 

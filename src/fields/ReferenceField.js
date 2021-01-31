@@ -43,20 +43,21 @@ class ReferenceField extends BaseField {
       return;
     }
 
-    if (
-      typeof value != "string" &&
-      value instanceof DocumentReference === false
-    ) {
+    if (typeof value != "string") {
       throw new InvalidFieldType(
         `${this.originalName} only accept value(string) value in model ${this.modelName}, invalid value provided "${value}"`
       );
     }
 
-    if (value instanceof DocumentReference) {
-      this.val = new FireoDocRef(value);
-    } else {
-      this.val = firestore.doc(value);
-    }
+    this.val = firestore.doc(value);
+  }
+
+  /**
+   * Set db field value
+   * @param {DocumentReference} value Document reference
+   */
+  setDbValue(value) {
+    this.val = new FireoDocRef(value);
   }
 
   /**

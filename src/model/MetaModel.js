@@ -113,7 +113,7 @@ class MetaModel {
    */
   async __setFieldsValue(result = { data, id, key, extra }) {
     for (const [propertyName, field] of Object.entries(this.__meta.fields)) {
-      field.setValue(result.data[field.name]);
+      field.setDbValue(result.data[field.name]);
       this[propertyName] = await field.getDBValue();
     }
 
