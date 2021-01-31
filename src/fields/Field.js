@@ -4,6 +4,7 @@ const NumberField = require("./NumberField");
 const BooleanField = require("./BooleanField");
 const ListField = require("./ListField");
 const MapField = require("./MapField");
+const DateTimeField = require("./DateTimeField");
 
 /**
  * Possible Fireo Fields
@@ -45,6 +46,17 @@ class Field {
     options = { required: false, default: undefined, name: undefined }
   ) {
     return new MapField(options);
+  }
+
+  static DateTime(
+    options = {
+      required: false,
+      default: undefined,
+      name: undefined,
+      auto: undefined,
+    }
+  ) {
+    return new DateTimeField(options);
   }
 }
 

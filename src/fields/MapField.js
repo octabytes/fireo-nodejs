@@ -17,7 +17,7 @@ class MapField extends BaseField {
 
     if (value.constructor !== Object) {
       throw new InvalidFieldType(
-        `${this.originalName} only accept Array value in model ${this.modelName}, invalid value provided "${value}"`
+        `${this.originalName} only accept Map(Object) value in model ${this.modelName}, invalid value provided "${value}"`
       );
     }
 
