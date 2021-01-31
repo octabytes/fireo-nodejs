@@ -34,6 +34,14 @@ class Fireo {
   static listRemove(element) {
     return FieldValue.arrayRemove(element);
   }
+
+  /**
+   * Increment number in firestore
+   * @param {number} number increment number
+   */
+  static increment(number) {
+    return FieldValue.increment(number);
+  }
 }
 
 module.exports = {

@@ -1,10 +1,27 @@
 const chai = require("chai");
+const Model = require("../../../src/model/Model");
 const Field = require("../../../src/fields/Field");
 const { InvalidFieldType, RequiredField } = require("../../../errors");
+const { Fireo } = require("../../../index");
 
 const expect = chai.expect;
 
 describe("NumberField", () => {
+  it("Increment", async () => {
+    class User extends Model {
+      age = Field.Number();
+    }
+
+    const user = User.init();
+    user.age = 1;
+    await user.save();
+
+    user.age = Fireo.increment(10);
+    await user.update();
+
+    const doc = await User.collection.get({ key: user.key });
+    expect(doc.age).to.equal(11);
+  });
   describe("NumberField() set value", () => {
     let numberField;
     beforeEach(() => {

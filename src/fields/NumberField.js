@@ -1,5 +1,6 @@
 const BaseField = require("./BaseField");
 const { InvalidFieldType } = require("../../errors");
+const { FieldValue } = require("@google-cloud/firestore");
 /**
  * Field for Number data
  * @extends BaseField
@@ -15,7 +16,7 @@ class NumberField extends BaseField {
       return;
     }
 
-    if (typeof value != "number") {
+    if (typeof value != "number" && value instanceof FieldValue === false) {
       throw new InvalidFieldType(
         `${this.originalName} only accept number value in model ${this.modelName}, invalid value provided "${value}"`
       );
