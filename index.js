@@ -1,3 +1,4 @@
+const { GeoPoint } = require("@google-cloud/firestore");
 const firestore = require("./Firestore");
 
 class Fireo {
@@ -7,6 +8,15 @@ class Fireo {
 
   static batch() {
     return firestore.batch();
+  }
+
+  /**
+   * Create GeoPoint
+   * @param {number} latitude The latitude as a number between -90 and 90
+   * @param {number} longitude The longitude as a number between -180 and 180
+   */
+  static GeoPoint(latitude, longitude) {
+    return new GeoPoint(latitude, longitude);
   }
 }
 

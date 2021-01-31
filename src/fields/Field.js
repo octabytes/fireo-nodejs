@@ -5,6 +5,7 @@ const BooleanField = require("./BooleanField");
 const ListField = require("./ListField");
 const MapField = require("./MapField");
 const DateTimeField = require("./DateTimeField");
+const GeoPointField = require("./GeoPointField");
 
 /**
  * Possible Fireo Fields
@@ -57,6 +58,16 @@ class Field {
     }
   ) {
     return new DateTimeField(options);
+  }
+
+  static GeoPoint(
+    options = {
+      required: false,
+      default: undefined,
+      name: undefined,
+    }
+  ) {
+    return new GeoPointField(options);
   }
 }
 

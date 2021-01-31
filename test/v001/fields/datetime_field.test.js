@@ -13,7 +13,7 @@ describe("DateTime", () => {
     it("can be set the value", () => {
       const dt = new Date();
       dateTime.setValue(dt);
-      expect(dateTime.getValue).to.deep.equal(dt);
+      expect(dateTime.getValue).to.equal(dt);
     });
 
     it("should only accept the DateTime", () => {
@@ -42,7 +42,7 @@ describe("DateTime", () => {
     it("has a default value", () => {
       const dt = new Date();
       const dateTime = Field.DateTime({ default: dt });
-      expect(dateTime.getValue).to.deep.equal(dt);
+      expect(dateTime.getValue).to.equal(dt);
     });
   });
 
