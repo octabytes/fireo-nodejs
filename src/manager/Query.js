@@ -173,18 +173,18 @@ class Query {
     if (this.__queryParameters.offset) {
       ref = ref.offset(this.__queryParameters.offset);
     }
-    let docs;
+    let snapshot;
     if (this.__transaction) {
-      docs = await this.__transaction.get(ref);
+      snapshot = await this.__transaction.get(ref);
     } else {
-      docs = await ref.get();
+      snapshot = await ref.get();
     }
 
     const modelList = [];
 
-    docs.forEach((doc) => {
+    for (let doc of snapshot.docs) {
       const model = this.__collection.__modelObj.constructor.init();
-      model.__setFieldsValue({
+      await model.__setFieldsValue({
         data: doc.data(),
         id: doc.id,
         key: this.__collection.__extractKeyFromDocRef(doc._ref),
@@ -193,7 +193,7 @@ class Query {
         },
       });
       modelList.push(model);
-    });
+    }
 
     return {
       cursor: this.__encodeCursor(JSON.stringify(this.__queryParameters)),

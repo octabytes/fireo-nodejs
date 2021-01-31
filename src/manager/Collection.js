@@ -43,7 +43,7 @@ class Collection extends BaseManager {
       );
     }
 
-    this.__modelObj.__setFieldsValue({
+    await this.__modelObj.__setFieldsValue({
       data: snapshot.data(),
       id: snapshot.id,
       key: this.__extractKeyFromDocRef(docRef),

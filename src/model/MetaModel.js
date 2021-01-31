@@ -111,10 +111,10 @@ class MetaModel {
    * @param {string} result.key - Document key
    * @param {Any} result.extra - Any extra data which you want to add with model meta
    */
-  __setFieldsValue(result = { data, id, key, extra }) {
+  async __setFieldsValue(result = { data, id, key, extra }) {
     for (const [propertyName, field] of Object.entries(this.__meta.fields)) {
       field.setValue(result.data[field.name]);
-      this[propertyName] = field.getDBValue;
+      this[propertyName] = await field.getDBValue();
     }
 
     this.__setIdAndKey(result.id, result.key);

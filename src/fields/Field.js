@@ -6,6 +6,7 @@ const ListField = require("./ListField");
 const MapField = require("./MapField");
 const DateTimeField = require("./DateTimeField");
 const GeoPointField = require("./GeoPointField");
+const ReferenceField = require("./ReferenceField");
 
 /**
  * Possible Fireo Fields
@@ -61,13 +62,20 @@ class Field {
   }
 
   static GeoPoint(
+    options = { required: false, default: undefined, name: undefined }
+  ) {
+    return new GeoPointField(options);
+  }
+
+  static Reference(
     options = {
       required: false,
       default: undefined,
       name: undefined,
+      autoLoad: undefined,
     }
   ) {
-    return new GeoPointField(options);
+    return new ReferenceField(options);
   }
 }
 

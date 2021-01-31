@@ -103,7 +103,7 @@ class BaseField {
    * Get DB value
    * Coming from Firestore and insert into model
    */
-  get getDBValue() {
+  async getDBValue() {
     return this.val;
   }
 }
