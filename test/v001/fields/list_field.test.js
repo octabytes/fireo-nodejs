@@ -1,6 +1,8 @@
 const chai = require("chai");
+const Model = require("../../../src/model/Model");
 const Field = require("../../../src/fields/Field");
 const { InvalidFieldType, RequiredField } = require("../../../errors");
+const { Fireo } = require("../../../index");
 
 const expect = chai.expect;
 
@@ -43,6 +45,38 @@ describe("ListField", () => {
     it("has a default value", () => {
       const listField = Field.List({ default: [1, "string"] });
       expect(listField.getValue).to.deep.equal([1, "string"]);
+    });
+  });
+
+  describe("Update list", () => {
+    class User extends Model {
+      names = Field.List();
+    }
+
+    it("union", async () => {
+      const user = User.init();
+      user.names = ["name1", "name2"];
+      await user.save();
+
+      user.names = Fireo.listUnion("name3");
+      await user.update();
+
+      const doc = await User.collection.get({ key: user.key });
+      expect(doc.names.length).to.equal(3);
+      expect(doc.names.includes("name3")).to.be.true;
+    });
+
+    it("remove", async () => {
+      const user = User.init();
+      user.names = ["name1", "name2"];
+      await user.save();
+
+      user.names = Fireo.listRemove("name2");
+      await user.update();
+
+      const doc = await User.collection.get({ key: user.key });
+      expect(doc.names.length).to.equal(1);
+      expect(doc.names.includes("name2")).to.be.false;
     });
   });
 });

@@ -1,4 +1,4 @@
-const { GeoPoint } = require("@google-cloud/firestore");
+const { GeoPoint, FieldValue } = require("@google-cloud/firestore");
 const firestore = require("./Firestore");
 
 class Fireo {
@@ -18,6 +18,22 @@ class Fireo {
   static GeoPoint(latitude, longitude) {
     return new GeoPoint(latitude, longitude);
   }
+
+  /**
+   * Add element in firestore list
+   * @param {Any} element - element to add in list
+   */
+  static listUnion(element) {
+    return FieldValue.arrayUnion(element);
+  }
+
+  /**
+   * Remove element in firestore list
+   * @param {Any} element - element to remove in list
+   */
+  static listRemove(element) {
+    return FieldValue.arrayRemove(element);
+  }
 }
 
 module.exports = {
@@ -25,7 +41,5 @@ module.exports = {
 };
 
 // TODO
-// other fields array, geo point etc
-// array union, increment, server time
+// array union, increment
 // allow to create firestore from service file and other things
-// Custom Fields
