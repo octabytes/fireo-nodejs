@@ -1,7 +1,7 @@
 const Chai = require("chai");
-const Model = require("../src/model/Model");
-const Fields = require("../src/fields/Field");
-const Field = require("../src/fields/Field");
+const Model = require("../../../src/model/Model");
+const Fields = require("../../../src/fields/Field");
+const Field = require("../../../src/fields/Field");
 
 const expect = Chai.expect;
 
@@ -33,7 +33,7 @@ describe("Query", () => {
         user3.address = "address1";
         user3.save();
         resolve();
-      }, 200);
+      }, 500);
     });
   });
 

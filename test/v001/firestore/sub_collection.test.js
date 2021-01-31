@@ -1,6 +1,6 @@
 const Chai = require("chai");
-const Model = require("../src/model/Model");
-const Fields = require("../src/fields/Field");
+const Model = require("../../../src/model/Model");
+const Fields = require("../../../src/fields/Field");
 
 const expect = Chai.expect;
 

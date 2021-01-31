@@ -1,9 +1,9 @@
 const Chai = require("chai");
-const Model = require("../src/model/Model");
-const Field = require("../src/fields/Field");
+const Model = require("../../../src/model/Model");
+const Field = require("../../../src/fields/Field");
 const chaiAsPromised = require("chai-as-promised");
-const { Fireo } = require("../index");
-const { DocumentNotFound } = require("../errors");
+const { Fireo } = require("../../../index");
+const { DocumentNotFound } = require("../../../errors");
 
 const expect = Chai.expect;
 Chai.use(chaiAsPromised);

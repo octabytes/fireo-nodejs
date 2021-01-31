@@ -1,6 +1,7 @@
+const IDField = require("./IDField");
 const TextField = require("./TextField");
 const NumberField = require("./NumberField");
-const IDField = require("./IDField");
+const BooleanField = require("./BooleanField");
 
 /**
  * Possible Fireo Fields
@@ -24,6 +25,12 @@ class Field {
     options = { required: false, default: undefined, name: undefined }
   ) {
     return new NumberField(options);
+  }
+
+  static Boolean(
+    options = { required: false, default: undefined, name: undefined }
+  ) {
+    return new BooleanField(options);
   }
 }
 

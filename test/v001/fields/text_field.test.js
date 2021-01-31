@@ -1,6 +1,6 @@
 const chai = require("chai");
-const Field = require("../src/fields/Field");
-const { InvalidFieldType, RequiredField } = require("../errors");
+const Field = require("../../../src/fields/Field");
+const { InvalidFieldType, RequiredField } = require("../../../errors");
 
 const expect = chai.expect;
 

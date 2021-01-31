@@ -1,8 +1,8 @@
 const chai = require("chai");
-const Field = require("../src/fields/Field");
-const TextField = require("../src/fields/TextField");
-const NumberField = require("../src/fields/NumberField");
-const BaseField = require("../src/fields/BaseField");
+const Field = require("../../../src/fields/Field");
+const TextField = require("../../../src/fields/TextField");
+const NumberField = require("../../../src/fields/NumberField");
+const BaseField = require("../../../src/fields/BaseField");
 
 const expect = chai.expect;
 

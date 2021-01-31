@@ -66,7 +66,7 @@ class BaseField {
 
     // If value is not provide set the default value
     if (fv === undefined) {
-      if (this.default) {
+      if (this.default !== undefined) {
         fv = this.default;
       }
     }

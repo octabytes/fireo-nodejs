@@ -1,8 +1,12 @@
 const Chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const Model = require("../src/model/Model");
-const Field = require("../src/fields/Field");
-const { EmptyDocument, DocumentNotFound, KeyNotExist } = require("../errors");
+const Model = require("../../../src/model/Model");
+const Field = require("../../../src/fields/Field");
+const {
+  EmptyDocument,
+  DocumentNotFound,
+  KeyNotExist,
+} = require("../../../errors");
 
 const expect = Chai.expect;
 Chai.use(chaiAsPromised);

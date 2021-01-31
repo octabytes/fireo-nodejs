@@ -1,8 +1,8 @@
 const chai = require("chai");
-const Model = require("../src/model/Model");
-const Field = require("../src/fields/Field");
-const { InstantiateError } = require("../errors");
-const firestore = require("../Firestore");
+const Model = require("../../../src/model/Model");
+const Field = require("../../../src/fields/Field");
+const { InstantiateError } = require("../../../errors");
+const firestore = require("../../../Firestore");
 
 const expect = chai.expect;
 
