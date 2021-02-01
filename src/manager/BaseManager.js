@@ -21,10 +21,12 @@ class BaseManager {
     }
 
     if (this.__meta.id && this.__meta.id.getValue) {
-      return firestore.collection(collectionPath).doc(this.__meta.id.getValue);
+      return firestore.conn
+        .collection(collectionPath)
+        .doc(this.__meta.id.getValue);
     }
 
-    return firestore.collection(collectionPath).doc();
+    return firestore.conn.collection(collectionPath).doc();
   }
 
   /**
@@ -35,9 +37,9 @@ class BaseManager {
    */
   __createDocRef(by = { id, key }) {
     if (by.id) {
-      return firestore.collection(this.__meta.collectionName).doc(by.id);
+      return firestore.conn.collection(this.__meta.collectionName).doc(by.id);
     } else {
-      return firestore.doc(by.key);
+      return firestore.conn.doc(by.key);
     }
   }
 

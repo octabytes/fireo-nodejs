@@ -7,11 +7,16 @@ const {
   DocumentNotFound,
   KeyNotExist,
 } = require("../../../errors");
+const { Fireo } = require("../../../index");
 
 const expect = Chai.expect;
 Chai.use(chaiAsPromised);
 
 describe("Firestore Operation", () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
+
   //#################################
   //######### ID FIELD() #############
   //#################################

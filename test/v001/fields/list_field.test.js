@@ -7,6 +7,10 @@ const { Fireo } = require("../../../index");
 const expect = chai.expect;
 
 describe("ListField", () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
+
   describe("ListField() set value", () => {
     let listField;
     beforeEach(() => {

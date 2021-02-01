@@ -1,13 +1,16 @@
 const { GeoPoint, FieldValue } = require("@google-cloud/firestore");
 const firestore = require("./Firestore");
+const Model = require("./src/model/Model");
+const Field = require("./src/fields/Field");
+const BaseField = require("./src/fields/BaseField");
 
 class Fireo {
   static async runTransaction(callback) {
-    return await firestore.runTransaction(async (t) => callback(t));
+    return await firestore.conn.runTransaction(async (t) => callback(t));
   }
 
   static batch() {
-    return firestore.batch();
+    return firestore.conn.batch();
   }
 
   /**
@@ -42,12 +45,18 @@ class Fireo {
   static increment(number) {
     return FieldValue.increment(number);
   }
+
+  /**
+   * Get firestore connection
+   */
+  static get connection() {
+    return firestore;
+  }
 }
 
 module.exports = {
   Fireo,
+  Model,
+  Field,
+  BaseField,
 };
-
-// TODO
-// array union, increment
-// allow to create firestore from service file and other things

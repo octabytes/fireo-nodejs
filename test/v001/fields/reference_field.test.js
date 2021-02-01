@@ -4,10 +4,14 @@ const Field = require("../../../src/fields/Field");
 const { RequiredField } = require("../../../errors");
 const firestore = require("../../../Firestore");
 const { DocumentReference } = require("@google-cloud/firestore");
+const { Fireo } = require("../../../index");
 
 const expect = chai.expect;
 
 describe("ReferenceField", () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
   describe("ReferenceField() set value", () => {
     let refField;
 
@@ -17,7 +21,9 @@ describe("ReferenceField", () => {
 
     it("can be able to set value", async () => {
       refField.setValue("User/custom-id");
-      expect(refField.getValue).to.deep.equal(firestore.doc("User/custom-id"));
+      expect(refField.getValue).to.deep.equal(
+        firestore.conn.doc("User/custom-id")
+      );
     });
     it("should only accept key value", () => {
       expect(() => refField.setValue("User/custom-id")).to.not.throw();

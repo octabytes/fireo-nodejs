@@ -7,6 +7,9 @@ const { Fireo } = require("../../../index");
 const expect = chai.expect;
 
 describe("NumberField", () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
   it("Increment", async () => {
     class User extends Model {
       age = Field.Number();

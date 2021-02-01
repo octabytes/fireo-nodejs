@@ -140,13 +140,13 @@ class Query {
     let ref;
 
     if (this.__queryParameters.parent) {
-      ref = firestore.collection(
+      ref = firestore.conn.collection(
         this.__queryParameters.parent +
           "/" +
           this.__collection.__meta.collectionName
       );
     } else {
-      ref = firestore.collection(this.__collection.__meta.collectionName);
+      ref = firestore.conn.collection(this.__collection.__meta.collectionName);
     }
 
     if (this.__queryParameters.filters) {

@@ -49,7 +49,7 @@ class ReferenceField extends BaseField {
       );
     }
 
-    this.val = firestore.doc(value);
+    this.val = firestore.conn.doc(value);
   }
 
   /**

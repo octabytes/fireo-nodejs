@@ -9,6 +9,10 @@ const expect = Chai.expect;
 Chai.use(chaiAsPromised);
 
 describe("Transactions", async () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
+
   class User extends Model {
     name = Field.Text();
   }

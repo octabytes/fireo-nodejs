@@ -6,6 +6,6 @@ const expect = chai.expect;
 
 describe("Firestore", () => {
   it("should be instance of Cloud firestore", () => {
-    expect(firestore instanceof CloudFirestore).to.be.true;
+    expect(firestore.conn instanceof CloudFirestore).to.be.true;
   });
 });

@@ -69,7 +69,7 @@ class Collection extends BaseManager {
         await ref.delete();
       }
     } else {
-      const ref = firestore.collection(this.__meta.collectionName);
+      const ref = firestore.conn.collection(this.__meta.collectionName);
       const docs = await ref.listDocuments();
       await this.__deleteCollectionDocs(docs, by.child);
     }
@@ -82,7 +82,7 @@ class Collection extends BaseManager {
    */
   async __deleteCollectionDocs(docList, child) {
     let batchSize = 0;
-    const batch = firestore.batch();
+    const batch = firestore.conn.batch();
     for (let doc of docList) {
       if (child) {
         const docCollections = await doc.listCollections();

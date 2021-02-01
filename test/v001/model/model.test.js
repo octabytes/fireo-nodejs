@@ -3,10 +3,15 @@ const Model = require("../../../src/model/Model");
 const Field = require("../../../src/fields/Field");
 const { InstantiateError } = require("../../../errors");
 const firestore = require("../../../Firestore");
+const { Fireo } = require("../../../index");
 
 const expect = chai.expect;
 
 describe("Model", () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
+
   class User extends Model {
     name = Field.Text();
   }
@@ -77,7 +82,7 @@ describe("Model", () => {
     user.name = "string";
     await user.save();
 
-    const snapshot = await firestore
+    const snapshot = await firestore.conn
       .collection("custom_collection")
       .doc(user.id)
       .get();

@@ -1,14 +1,14 @@
 const chai = require("chai");
 const Model = require("../../../src/model/Model");
-const Field = require("../../../src/fields/Field");
-const { RequiredField } = require("../../../errors");
-const firestore = require("../../../Firestore");
-const { DocumentReference } = require("@google-cloud/firestore");
 const BaseField = require("../../../src/fields/BaseField");
+const { Fireo } = require("../../../index");
 
 const expect = chai.expect;
 
 describe("CustomField", () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
   it("should modify Database value", async () => {
     class WeekDays extends BaseField {
       days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];

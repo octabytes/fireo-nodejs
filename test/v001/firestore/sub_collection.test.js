@@ -1,10 +1,15 @@
 const Chai = require("chai");
 const Model = require("../../../src/model/Model");
 const Fields = require("../../../src/fields/Field");
+const { Fireo } = require("../../../index");
 
 const expect = Chai.expect;
 
 describe("Sub Collection", () => {
+  before(() => {
+    Fireo.connection.setting({ projectId: "fs-test-project" });
+  });
+
   class User extends Model {
     name = Fields.Text();
   }
