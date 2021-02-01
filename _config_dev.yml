@@ -1,0 +1,25 @@
+theme: "just-the-docs"
+
+#remote_theme: pmarsceill/just-the-docs
+
+title: FireO
+description: A modern and simplest convenient ORM package in NodeJs. FireO is specifically designed for the Google's Firestore
+baseurl: "/" # the subpath of your site, e.g. /blog
+url: "https://octabyte.io" # the base hostname & protocol for your site, e.g. http://example.com
+
+# Logo
+logo: "/fireo_logo.png"
+
+permalink: pretty
+
+# Enable or disable the site search
+# Supports true (default) or false
+search_enabled: true
+
+# Aux links for the upper right navigation
+aux_links:
+  "Edit FireO Doc":
+    - "//github.com/octabytes/fireo-nodejs/tree/gh-pages"
+
+# Footer content appears at the bottom of every page's main content
+footer_content: "Copyright &copy; 2019 <a href=\"https://github.com/octabytes/fireo-nodejs\">FireO</a> All rights reserved. Powered by <a href=\"https://octabyte.io\">OctaByte</a>"

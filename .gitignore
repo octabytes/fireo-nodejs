@@ -1,0 +1,27 @@
+#-----------------
+# Editors
+#-----------------
+.vscode
+.idea
+
+#------------
+# Avoid code
+#------------
+src/
+.tox/
+
+#-----------------
+# ignore Gem 
+#-----------------
+*.gem
+.bundle
+Gemfile.lock
+
+#-----------------
+# Jekyll
+#-----------------
+.sass-cache
+_site
+
+main.py
+service-account.json
