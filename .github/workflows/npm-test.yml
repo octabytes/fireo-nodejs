@@ -25,12 +25,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Firestore CLI and start emulators
-        run: npm i -g firebase firebase-tools
+        run: |
+          npm i -g firebase firebase-tools
           firebase setup:emulators:firestore
           firebase emulators:start --only firestore &
 
       - name: Test Fireo Package
-        run: npm ci
+        run: |
+          npm ci
           npm test
         env:
           FIRESTORE_EMULATOR_HOST: localhost:8080
