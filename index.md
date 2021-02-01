@@ -30,7 +30,7 @@ npm install fireo
 ### Example Usage
 
 ```js
-const {Model, Field} = require("fireo);
+const {Model, Field} = require("fireo");
 
 class User extends Model{
     name = Field.Text();
