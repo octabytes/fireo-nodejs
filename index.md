@@ -30,8 +30,7 @@ npm install fireo
 ### Example Usage
 
 ```nodejs
-const {Model, Field} = require("fireo)
-
+const {Model, Field} = require("fireo);
 
 class User extends Model{
     name = Field.Text();
@@ -43,7 +42,7 @@ await u.save();
 
 # Get user
 const user = await User.collection.get({key: u.key});
-console.log(user.name)
+console.log(user.name);
 ```
 
 ## License
