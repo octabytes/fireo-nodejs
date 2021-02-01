@@ -1,10 +1,10 @@
 {
   "name": "fireo",
-  "version": "0.0.1",
+  "version": "0.9.1",
   "description": "Google Cloud Firestore modern and simplest convenient ORM package in NodeJs. FireO is specifically designed for the Google's Firestore",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha test/**/*test.js"
   },
   "repository": {
     "type": "git",
