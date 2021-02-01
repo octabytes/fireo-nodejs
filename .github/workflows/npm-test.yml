@@ -23,14 +23,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
       - name: Install Firestore CLI
       - run: npm i -g firebase firebase-tools
       - name: Setup Emulators
       - run: firebase setup:emulators:firestore
       - name: Start firestore emulators
       - run: firebase emulators:start --only firestore &
-
       - name: Test Fireo Package
       - run: npm ci
       - run: npm test
