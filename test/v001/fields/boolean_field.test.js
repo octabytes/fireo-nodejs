@@ -5,6 +5,9 @@ const { InvalidFieldType, RequiredField } = require("../../../errors");
 const expect = chai.expect;
 
 describe("BooleanField", () => {
+  it("should fail", () => {
+    expect(true).to.be.false;
+  });
   describe("BooleanField() set value", () => {
     let booleanField;
     beforeEach(() => {
