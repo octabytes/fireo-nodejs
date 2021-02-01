@@ -29,7 +29,7 @@ npm install fireo
 
 ### Example Usage
 
-```nodejs
+```js
 const {Model, Field} = require("fireo);
 
 class User extends Model{
@@ -40,7 +40,7 @@ const u = User.init();
 u.name = "Azeem Haider";
 await u.save();
 
-# Get user
+// Get user
 const user = await User.collection.get({key: u.key});
 console.log(user.name);
 ```
