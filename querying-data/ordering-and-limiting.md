@@ -21,77 +21,78 @@ collection. These queries can also be used with either `get()` or `fetch()`
 
 ## Order and limit data
 By default, a query retrieves all documents that satisfy the query in ascending order by document ID. 
-You can specify the sort order for your data using `order()`, and you can limit the number of documents 
+You can specify the sort order for your data using `orderBy()`, and you can limit the number of documents 
 retrieved using `limit()` or passing number of documents in `fetch(limit)`.
 
 For example, you could query for the first 3 cities alphabetically with:
-```python
-City.collection.order('name').limit(3).fetch()
+```js
+await City.collection.orderBy('name').limit(3).fetch();
 
-# Same thing can be achieved by passing limit in fetch() method
-City.collection.order('name').fetch(3)
+// Same thing can be achieved by passing limit in fetch() method
+await City.collection.orderBy('name').fetch(3);
 ```
 
 You could also sort in descending order to get the last 3 cities:
-```python
-City.collection.order('-name').fetch(3)
+```js
+await City.collection.orderBy('-name').fetch(3);
 ```
 You can also order by multiple fields. For example, if you wanted to order by state, 
 and within each state order by population in descending order:
-```python
-City.collection.order('state').order('-population')
+```js
+await City.collection.orderBy('state').orderBy('-population');
 ```
 
-You can combine `filter()` with `order()` and `limit()`. In the following example, 
+You can combine `where()` with `order()` and `limit()`. In the following example, 
 the queries define a population threshold, sort by population in ascending order, 
 and return only the first few results that exceed the threshold:
 
-```python
-City.collection.filter('population', '>', 2500000).order('population').limit(2).fetch()
+```js
+await City.collection.where('population', '>', 2500000).orderBy('population').limit(2).fetch();
 ```
 However, if you have a filter with a range comparison (`<`, `<=`, `>`, `>=`), your first ordering 
 must be on the same field:
 
 **Valid:** Range filter and orderBy on the same field
-```python
-City.collection.filter('population', '>', 2500000).order('population').fetch()
+```js
+await City.collection.where('population', '>', 2500000).orderBy('population').fetch();
 ```
 
 **Invalid:** Range filter and first orderBy on different fields
-```python
-City.collection.filter('population', '>', 2500000).order('country')
+```js
+await City.collection.where('population', '>', 2500000).orderBy('country');
 ```
 
 ## Sub collection
-Sub collection queries work in same fashion but you need to pass `parent_key` to search in specific 
-collection. Ordering and limiting apply same like other root collection
+Sub collection queries work in same fashion but you need to pass `parent_key` to search in specific collection. Ordering and limiting apply same like other root collection
 
 ### Sample Data
 {: .no_toc }
 
-```python
-class Post(Model):
-    title = TextField()
-    content = TextField()
+```js
+const {Model, Field} = require("fireo");
 
+class Post extends Model{
+    title = Field.Text();
+    content = Field.Text();
+}
 
-class Review(Model):
-    name = TextField()
-    stars = NumberField()
+class Review extends Model {
+    name = Field.Text();
+    stars = Field.Number();
+}
 
+const p = Post.fromObject({title: "First Post", content: "Some Content"});
+await p.save();
 
-p = Post(title="First Post", content="Some Content")
-p.save()
+const r1 = Review.init({parent: p.key});
+r1.name = 'Azeem';
+r1.stars = 5;
+await r1.save();
 
-r1 = Review(parent=p.key)
-r1.name = 'Azeem'
-r1.stars = 5
-r1.save()
-
-r2 = Review(parent=p.key)
-r2.name = 'Arfan'
-r2.stars = 3
-r2.save()
+const r2 = Review.init({parent: p.key});
+r2.name = 'Arfan';
+r2.stars = 3;
+await r2.save();
 ```
 
 ### Example Usage
@@ -99,6 +100,6 @@ r2.save()
 
 The following query returns all reviews order by **review stars**
 
-```python
-reviews = Review.collection.parent(post_key).order('stars').fetch()
+```js
+const reviews = await Review.collection.parent(post_key).orderBy('stars').fetch();
 ```

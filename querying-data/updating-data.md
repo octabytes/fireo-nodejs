@@ -25,21 +25,23 @@ Model instance has `update()` method you can update documents using this method
 ### Example Usage
 {: .no_toc }
 
-```python
-class User(Model):
-    name = TextField()
-    age = NumberField()
+```js
+const {Model, Field} = require("fireo");
 
+class User extends Model {
+    name = Field.Text();
+    age = Field.Text();
+}
 
-u = User(name="Azeem", age=26)
-u.save()
+const u = User.fromObject({name: "Azeem", age: 26});
+await u.save();
 
-# Update document
-u.name = "Arfan"
-u.update()
+// Update document
+u.name = "Arfan";
+await u.update();
 
-print(u.name)  # Arfan
-print(u.age)  # 26
+console.log(u.name)  // Arfan
+console.log(u.age)  // 26
 ```
 
 ## Using Key
@@ -47,25 +49,25 @@ Don't get document just for updating it. This is not efficient way you can pass 
 method.
 
 **Don't Do This** *This will take two request one for getting data and second for updating*
-```python
-u = User.collection.get(user_key)
-u.name = "Updated Name"
-u.update()
+```js
+const u = await User.collection.get({key: user_key});
+u.name = "Updated Name";
+u.update();
 
-print(u.name)  # Updated Name
-print(u.age)  # 26
+console.log(u.name)  // Updated Name
+console.log(u.age)  // 26
 ```
 
 If you don't need to use document value then update the document just passing the `key`
 
 **Do This** *This will take only one request to update document which is efficient*
-```python
-u = User()
-u.name = "Haider"
-u.update(user_key)
+```js
+const u = User.init();
+u.name = "Haider";
+await u.update({key: user_key});
 
-print(u.name)  # Haider
-print(u.age)  # 26
+console.log(u.name)  // Haider
+console.log(u.age)  // 26
 ```
 
 ### Passing key is not always efficient
@@ -77,61 +79,31 @@ query filter then passing `key` to `update()` is not make it efficient
 ### For Example
 {: .no_toc }
 
-```python
-user = User.collection.filter('name', '==', 'Azeem').get()
-user.name = 'Update Name'
+```js
+const user = await User.collection.where('name', '==', 'Azeem').get();
+user.name = 'Update Name';
 
-user.update(user.key)  # This will not make it efficient and this is not recommended way
+await user.update(user.key)  // This will not make it efficient and this is not recommended way
 
-# Instead of this use update method without passing key
-user.update()  # Recommended way
-```
-
-### Update NestedModel
-{: .no_toc }
-
-But if you are using `NestedModel` then always first `get()` document then `update` otherwise it will create problem 
-with `default` values if you set to any field. Because FireO can not know what value you want to add in `updated` document
-a new `None` value or the `default` value for this field. So that's why always get `document` first then `update`
-
-### For Example
-{: .no_toc }
-
-```python
-class Child(Model):
-    amount = NumberField(default=7)
-
-class Parent(Model):
-    name = TextField()
-    child = NestedModel(Child)
-
-m = Parent()
-m.name = 'Any Name'
-m.child.amount = 10
-m.save()
-
-# updating document 
-# First get the document then update it without passing key in update method
-m = Parent.collectino.get(key)
-m.name = 'Updated Name'
-m.update()
+// Instead of this use update method without passing key
+await user.update()  // Recommended way
 ```
 
 ## Update elements in an array
-If your document contains an array field, you can use `ListUnion()` and `ListRemove()` to add and remove elements. 
-`ListUnion()` adds elements to an array but only elements not already present. `ListRemove()` removes all 
+If your document contains an array field, you can use `listUnion()` and `listRemove()` to add and remove elements. 
+`listUnion()` adds elements to an array but only elements not already present. `listRemove()` removes all 
 instances of each given element.
 
-```python
-city = City.collection.get(city_key)
+```js
+const city = await City.collection.get({key: city_key});
 
-# Atomically add a new region to the 'regions' list field.
-city.regions = fireo.ListUnion(['greater_virginia'])
-city.update()
+// Atomically add a new region to the 'regions' list field.
+city.regions = Fireo.listUnion('greater_virginia');
+await city.update();
 
-# // Atomically remove a region from the 'regions' List field.
-city.regions = fireo.ListRemove(['east_coast'])
-city.update()
+// Atomically remove a region from the 'regions' List field.
+city.regions = Fireo.listRemove('east_coast');
+await city.update();
 ```
 
 ## Increment a numeric value
@@ -140,11 +112,11 @@ An increment operation increases or decreases the current value of a field by th
 If the field does not exist or if the current field value is not a numeric value, the operation 
 sets the field to the given value.
 
-```python
-city = City.collection.get(city_key)
+```js
+const city = await City.collection.get({key: city_key});
 
-city.population = fireo.Increment(50)
-city.update()
+city.population = Fireo.increment(50);
+await city.update();
 ```
 
 ## Sub Collection

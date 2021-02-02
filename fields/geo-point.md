@@ -18,35 +18,33 @@ nav_order: 8
 
 ## Example Usage
 
-```python
-class User(Model):
-    location = GeoPoint()
+```js
+const {Model, Field, Fireo} = require("fireo");
 
+class User extends Model{
+    location = Field.GeoPoint();
+}
 
-u = User()
-u.location = fireo.GeoPoint(latitude=123.23, longitude=421.12)
+const u = User.init();
+u.location = Fireo.GeoPoint(123.23, 421.12);
 ```
 
 ## Allowed Attributes
 
-The following attributes supported by GeoPoint Field.
+The following attributes supported by Boolean Field.
 
 1. [default](#default)
 2. [required](#required)
-3. [column_name](#column-name)
-4. [validator](#validator)
+3. [name](#custom-name)
 
 - ### Default
 
-  Default value for field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#default)
+  Default value for field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#default)
 
 - ### Required
 
-  Set `True` if value is required for the field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#required)
+  Set `true` if value is required for the field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#required)
 
-- ### Column Name
+- ### Custom Name
 
-  Set different column name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#column-name)
-
-- ### Validator
-  Validate given value of field. This is base attribute that is available in all fields [Read More](/FireO/fields/field#validator)
+  Set different name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#custom-name)

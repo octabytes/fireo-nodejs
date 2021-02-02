@@ -20,36 +20,33 @@ Array field for Firestore
 
 ## Example Usage
 
-```python
-class User(Model):
-    subjects = ListField()
+```js
+const {Model, Field} = require("fireo");
 
+class User extends Model{
+    subjects = Field.List();
+}
 
-
-u = User()
+const u = User.init();
 u.subjects = ['English', 'Math']
 ```
 
 ## Allowed Attributes
 
-The following attributes supported by List Field.
+The following attributes supported by Boolean Field.
 
 1. [default](#default)
 2. [required](#required)
-3. [column_name](#column-name)
-4. [validator](#validator)
+3. [name](#custom-name)
 
 - ### Default
 
-  Default value for field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#default)
+  Default value for field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#default)
 
 - ### Required
 
-  Set `True` if value is required for the field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#required)
+  Set `true` if value is required for the field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#required)
 
-- ### Column Name
+- ### Custom Name
 
-  Set different column name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#column-name)
-
-- ### Validator
-  Validate given value of field. This is base attribute that is available in all fields [Read More](/FireO/fields/field#validator)
+  Set different name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#custom-name)

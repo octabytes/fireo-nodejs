@@ -18,104 +18,33 @@ nav_order: 3
 
 ## Example Usage
 
-```python
-class User(Model):
-    salary = NumberField()
+```js
+const {Model, Field} = require("fireo");
 
+class User extends Model{
+    salary = Field.Number();
+}
 
-u = User(salary=1000)
-u.save()
+const u = User.init();
+u.salary = 10000;
 ```
 
 ## Allowed Attributes
 
-The following attributes supported by DateTime Field.
+The following attributes supported by Boolean Field.
 
 1. [default](#default)
 2. [required](#required)
-3. [column_name](#column-name)
-4. [validator](#validator)
-5. [int_only](#int-only)
-6. [float_only](#float-only)
-7. [range](#range)
+3. [name](#custom-name)
 
 - ### Default
 
-  Default value for field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#default)
+  Default value for field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#default)
 
 - ### Required
 
-  Set `True` if value is required for the field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#required)
+  Set `true` if value is required for the field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#required)
 
-- ### Column Name
+- ### Custom Name
 
-  Set different column name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#column-name)
-
-- ### Validator
-
-  Validate given value of field. This is base attribute that is available in all fields [Read More](/FireO/fields/field#validator)
-
-- ### Int Only
-
-Allow only integer numbers. Other than integer number it will raise error
-
-### Example Usage
-
-{: .no_toc }
-
-```python
-class User(Model):
-    salary = NumberField(int_only=True)
-
-
-u = User(salary=1000)
-u.save()
-```
-
-- ### Float Only
-
-Allow only float numbers. Other than float number it will raise error
-
-### Example Usage
-
-{: .no_toc }
-
-```python
-class User(Model):
-    salary = NumberField(float_only=True)
-
-
-u = User(salary=21.37)
-u.save()
-```
-
-- ### Range
-  Allow number between the range. Syntax `range=(start, stop)`
-
-### Example Usage
-
-{: .no_toc }
-
-```python
-class User(Model):
-    salary = NumberField(range=(100, 20000))
-
-
-u = User(salary=1000)
-u.save()
-```
-
-If you want to allow only max value set the `start` as `None` in this
-case there is no minimum limit
-
-```python
-class User(Model):
-    salary = NumberField(range=(None, 20000))
-```
-
-To allow only minimum value set the `stop` as `None` or just put the `start` value only
-
-```python
-class User(Model):
-    salary = NumberField(range=(100, None))  # Equivalent to range=(100)
-```
+  Set different name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#custom-name)

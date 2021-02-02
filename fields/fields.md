@@ -15,8 +15,7 @@ The following data types supported by FireO. It also describes the sort order us
 
 ## Value type ordering
 
-When a query involves a field with values of mixed types, Cloud Firestore uses a deterministic ordering based on the 
-internal representations. The following list shows the order
+When a query involves a field with values of mixed types, Cloud Firestore uses a deterministic ordering based on the internal representations. The following list shows the order
 
 - Null values
 - Boolean values

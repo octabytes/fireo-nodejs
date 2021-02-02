@@ -16,91 +16,74 @@ nav_order: 10
 
 ---
 
-A DocumentReference refers to a document location in a Firestore database and can be used to write, read,
-or listen to the location. The document at the referenced location may or may not exist.
+A DocumentReference refers to a document location in a Firestore database and can be used to write, read, or listen to the location. The document at the referenced location may or may not exist.
 
 ## Example Usage
 
-```python
-class Company(Model):
-    name = TextField()
+```js
+const {Model, Field} = require("fireo");
 
+class Company extends Model{
+    name = Field.Text();
+}
 
-class Employee(Model):
-    name = TextField()
-    company = ReferenceField(Company)
+class Employee extends Model{
+    name = Field.Text();
+    company = Field.Reference();
+}
 
-c = Company(name="Abc_company")
-c.save()
+const c = Company.init();
+c.name = "Abc_company";
+await c.save()
 
-e = Employee()
-e.name = 'Employee Name'
-e.company = c
-e.save()
+const e = Employee.init();
+e.name = 'Employee Name';
+e.company = c.key;
+await e.save();
 ```
 
 ## Allowed Attributes
 
-The following attributes supported by Reference Field.
+The following attributes supported by Boolean Field.
 
 1. [default](#default)
 2. [required](#required)
-3. [column_name](#column-name)
-4. [validator](#validator)
-5. [auto_load](#auto-load)
-6. [on_load](#on-load)
+3. [name](#custom-name)
+4. [autoLoad](#auto-load)
 
 - ### Default
 
-  Default value for field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#default)
+  Default value for field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#default)
 
 - ### Required
 
-  Set `True` if value is required for the field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#required)
+  Set `true` if value is required for the field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#required)
 
-- ### Column Name
+- ### Custom Name
 
-  Set different column name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#column-name)
+  Set different name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#custom-name)
 
-- ### Validator
-
-  Validate given value of field. This is base attribute that is available in all fields [Read More](/FireO/fields/field#validator)
 
 - ### Auto Load
-  Load reference document automatically, by default it is `True` If you disable the `auto_load` then you can get
+  Load reference document automatically, If you disable the `auto_load` then you can get
   document by `get()` method.
 
 ### Example Usage
 
 {: .no_toc }
 
-```python
-class Employee(Model):
-    name = TextField()
-    company = ReferenceField(Company, auto_load=False)
+```js
+const {Model, Field} = require("fireo");
 
+class Employee extends Model{
+    name = Field.Text();
+    company = Field.Reference({autoLoad: false});
+}
 
-e = Employee.collection.get(emp_key)
-print(e.company)  # object of ReferenceDocLoader
+const e = await Employee.collection.get({key: emp_key});
+console.log(e.company);
 
-# Reference document can be get using get() method
-com = e.company.get()
-print(com.name)
-```
-
-- ### On Load
-  Call user specify method when reference document load
-
-### Example Usage
-
-{: .no_toc }
-
-```python
-class Employee(Model):
-    name = TextField()
-    company = ReferenceField(Company, on_load="do_something")
-
-    def do_something(self, company):
-        # do something with company document
-        print(company.name)
+// Reference document can be get using get() method
+const com = e.company.get();
+console.log(com.name)
 ```

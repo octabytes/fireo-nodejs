@@ -18,40 +18,38 @@ nav_order: 7
 
 ## Example Usage
 
-```python
-class User(Model):
-    created = DateTime()
+```js
+const {Model, Field} = require("fireo");
 
+class User extends Model{
+    created = Field.DateTime();
+}
 
-u = User()
-u.created = datetime.datetime.now()
+const u = User.init();
+u.created = new Date();
 ```
 
 ## Allowed Attributes
 
-The following attributes supported by DateTime Field.
+The following attributes supported by Boolean Field.
 
 1. [default](#default)
 2. [required](#required)
-3. [column_name](#column-name)
-4. [validator](#validator)
-5. [auto](#auto)
+3. [name](#custom-name)
+4. [auto](#auto)
 
 - ### Default
 
-  Default value for field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#default)
+  Default value for field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#default)
 
 - ### Required
 
-  Set `True` if value is required for the field. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#required)
+  Set `true` if value is required for the field. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#required)
 
-- ### Column Name
+- ### Custom Name
 
-  Set different column name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/FireO/fields/field#column-name)
+  Set different name in Firestore instead of field name. This is base attribute that is available in all fields. [Read More](/fireo-nodejs/fields/field#custom-name)
 
-- ### Validator
-
-  Validate given value of field. This is base attribute that is available in all fields [Read More](/FireO/fields/field#validator)
 
 - ### Auto
 
@@ -61,12 +59,14 @@ Set the auto date if no value is provided
 
 {: .no_toc }
 
-```python
-class User(Model):
-    created = DateTime(auto=True)
+```js
+const {Model, Field} = require("fireo");
 
+class User extends Model{
+    created = Field.DateTime({auto: true});
+}
 
-u = User()
+const u = User.init();
 u.save()
-print(u.created)
+console.log(u.created)
 ```

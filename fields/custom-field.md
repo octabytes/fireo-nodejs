@@ -16,112 +16,129 @@ nav_order: 12
 
 ---
 
-Create your own custom fields, extend the class from base `Field` or you can extend any existing field also.
+Create your own custom fields, extend the class from base `BaseField` or you can extend any existing field also.
 
 ## Simple
 
-You can create simplest field just by extending base `Field`
+You can create simplest field just by extending base `BaseField`
 
 ### Example Usage
 
 {: .no_toc }
 
-```python
-class WeekDays(Field):
-    pass
+```js
+const {Model, BaseField} = require("fireo");
 
+class WeekDays extends BaseField{
 
-class User(Model):
-    day = WeekDays()
+}
 
-u = User(day=1)
-u.save()
+class User extends Model{
+    day = new WeekDays();
+}
+
+const u = User.init();
+u.day = 1;
+await u.save()
 ```
 
 ## Extend DB value
 
-Control how the value of field will be save in Firestore. Override method `db_value()` to change the value.
+Control how the value of field will be save in Firestore. Override method `setValue()` to change the value.
 
 ### Example Usage
 
 {: .no_toc }
 
-```python
-class WeekDays(Field):
+```js
+const {Model, BaseField} = require("fireo");
+
+class WeekDays extends BaseField{
     days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-    def db_value(self, val):
-        return self.days[val]
+    setValue(value){
+        return this.days[value];
+    }
+}
 
-u = User(day=0)
-u.save()
+const u = User.init();
+u.day = 0;
+await u.save();
 
-# This will save "Mon" instead of "0" in Firestore
-print(u.day)  # Mon
+// This will save "Mon" instead of "0" in Firestore
+console.log(u.day)  // Mon
 ```
 
 ## Extend Field Value
 
-Control how value represent when coming for Firestore. Override method `field_value()` to control this behaviour.
+Control how value represent when coming for Firestore. Override method `getDBValue()` to control this behavior.
 
 ### Example Usage
 
 {: .no_toc }
 
-```python
-class WeekDays(Field):
+```js
+const {Model, BaseField} = require("fireo");
+
+class WeekDays extends BaseField{
     days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-    def db_value(self, val):
-        return self.days[val]
+    setValue(value){
+        return this.days[value];
+    }
 
-    def field_value(self, val):
-        return self.days.index(val)
+    async getDBValue() {
+        return this.val + "-mod";
+    }
+}
 
+const u = User.init();
+u.day = 0;
+await u.save()
 
-u = User(day=0)
-u.save()
+// This will save "Mon" instead of "0" in Firestore
+// But when you get value it will return "0" instead of "Mon"
 
-# This will save "Mon" instead of "0" in Firestore
-# But when you get value it will return "0" instead of "Mon"
-
-user = User.collection.get(u.key)
-print(user.day)  # 0
+const user = await User.collection.get({key: u.key});
+console.log(user.day)  // 0
 ```
 
 ## Create attributes
 
-[Default](/FireO/fields/field#default), [Required](/FireO/fields/field#required) and [Column Name](/FireO/fields/field#column-name)
+[Default](/fireo-nodejs/fields/field#default), [Required](/fireo-nodejs/fields/field#required) and [Name](/fireo-nodejs/fields/field#custom-name)
 attributes are allowed in every field. But you can create more attributes for your field.
 
 ### Method to create field attributes
 
-Add filed attribute in the `allowed_attributes` list and then create method for each attribute. Method name must
-be start from `attr_` and then the name of the attribute. Method should return the value otherwise `None` value
-set for field
+Add filed attribute in the `fieldOptions` list and then create method for each attribute. Method name must be start from `option_` and then the name of the attribute. Method should return the value otherwise `undefined` value set for field
 
-_Attribute Method run in the same order as they are specify in `allowed_attributes`_
+_Attribute Method run in the same order as they are specify in `fieldOptions`_
 
 ### Example Usage
 
-```python
-class EmailGenerator(Field):
-    allowed_attributes = ['prefix', 'domain']
+```js
+const {Model, BaseField} = require("fireo");
 
-    def attr_prefix(self, attr_val, field_val):
-        return attr_val + "." + field_val
+class EmailGenerator extends BaseField {
+    static fieldOptions = ["prefix", "domain"];
 
-    def attr_domain(self, attr_val, field_val):
-        return field_val + "@" + attr_val
+    option_prefix({ optionValue, fieldValue }) {
+    return optionValue + "." + fieldValue;
+    }
 
+    option_domain({ optionValue, fieldValue }) {
+    return fieldValue + "@" + optionValue;
+    }
+}
 
-class User(Model):
-    email = EmailGenerator(prefix='prefix', domain='example.com')
+class User extends Model {
+    email = new EmailGenerator({ prefix: "prefix", domain: "example.com" });
+}
 
-u = User()
-u.email = 'my_email'
-u.save()
+const user = User.init();
+user.email = "my_email";
+await user.save();
 
-# This will save email in Firestore like this "prefix.my_email@example.com"
-print(u.email)  #  prefix.my_email@example.com
+// This will save email in Firestore like this "prefix.my_email@example.com"
+console.log(u.email)  #  prefix.my_email@example.com
 ```

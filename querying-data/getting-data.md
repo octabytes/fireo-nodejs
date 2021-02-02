@@ -24,25 +24,18 @@ Read single document from collection
 ### Example Usage
 {: .no_toc }
 
-```python
-u = User.collection.get(user_key)
+```js
+const u = await User.collection.get({key: user_key});
 
-print(u.name)
-print(u.key)
+console.log(u.name);
+console.log(u.key);
 ```
 
-Convert model into `dict`
+Convert model into `object`
 
-```python
-u = User.collection.get(user_key)
-print(u.to_dict())
-```
-
-## Multiple documents
-Read multiple documents by providing **key list**
-
-```python
-User.collection.get_all(key_list)
+```js
+const u = await User.collection.get({key: user_key});
+console.log(u.toObject());
 ```
 
 ## All Documents
@@ -51,11 +44,12 @@ Read all documents from collection
 ### Example Usage
 {: .no_toc }
 
-```python
-user_list = User.collection.fetch()
+```js
+const userList = await User.collection.fetch();
 
-for user in user_list:
-    print(user.id, user.name)
+for (let user of userList){
+    console.log(user.id, user.name);
+}
 ```
 
 ## Sub Collection
@@ -64,24 +58,10 @@ Get child documents from collection
 ### Example Usage
 {: .no_toc }
 
-```python
-users = User.collection.parent(parent_key).fetch()
+```js
+const users = await User.collection.parent(parent_key).fetch();
 
-for user in users:
-    print(user.id, user.name)
-```
-
-## Get Root collections
-FireO allow you to get all root collections
-
-```python
-fireo.list_collections()
-```
-
-## Get Sub collections
-You can get `subcollection` of any `document`
-
-```python
-post = Post.collection.get(post_key)
-post.list_subcollections()
+for (let user of users){
+    console.log(user.id, user.name);
+}
 ```
