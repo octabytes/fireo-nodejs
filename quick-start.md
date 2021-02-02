@@ -25,7 +25,7 @@ To run the client library, you must first set up [authentication](/fireo-nodejs/
 ## Add data
 
 ```js
-const {Model, Field} = require("fireo)
+const {Model, Field} = require("fireo")
 
 class User extends Model {
     name = Field.Text();
