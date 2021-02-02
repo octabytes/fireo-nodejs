@@ -53,7 +53,7 @@ $ export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keyfile.json"
 
 or you can pass JSON file in FireO connection
 
-```nodejs
+```js
 Fireo.connection.setting({keyFilename: "/path/to/keyfile.json"})
 ```
 
@@ -69,6 +69,6 @@ However, you may want to be explicit because
 
 In these situations, you can create an explicit [Credentials](https://google-auth.readthedocs.io/en/stable/reference/google.auth.credentials.html#google.auth.credentials.Credentials) object suited to your environment. After creation, you can pass it directly to a Connection
 
-```nodejs
+```js
 Fireo.connection.setting({credentials: credentials})
 ```

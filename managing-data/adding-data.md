@@ -22,7 +22,7 @@ Create model object and add values to it and `save()` the model. After saving mo
 
 ### Example Usage
 
-```nodejs
+```js
 const {Model, Field} = require("fireo);
 
 
@@ -49,7 +49,7 @@ Model can also create from `fromObject`
 
 #### Example Usage
 {: .no_toc }
-```nodejs
+```js
 const u = User.fromObject({name: "Azeem", age: 27});
 await u.save()
 
@@ -63,7 +63,7 @@ Custom id can also be specified by using [IDField](/fields/id-field)
 ### Example Usage
 {: .no_toc }
 
-```nodejs
+```js
 const {Model, Field} = require("fireo);
 
 class User extends Model{
@@ -87,7 +87,7 @@ If you add [IDField](/fields/id-field) and not specify any id then id will be st
 #### Example
 {: .no_toc }
 
-```nodejs
+```js
 const u = User.init();
 u.name = "Azeem";
 u.age = 26;
@@ -105,7 +105,7 @@ You can choose any name for id field it can be **id** itself
 If the document does not exist, it will be created. If the document does exist, its data should be **merged** into the existing document, as follows
 
 ### Example Usage
-```nodejs
+```js
 const u = User.init();
 u.id = "custom-id";
 u.name = "Azeem";
@@ -122,7 +122,7 @@ A sub collection is a collection associated with a specific document. In FireO w
 
 ### Example Usage
 
-```nodejs
+```js
 const {Model, Field} = require("fireo);
 
 class Post extends Model{

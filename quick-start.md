@@ -24,7 +24,7 @@ To run the client library, you must first set up [authentication](/fireo-nodejs/
 
 ## Add data
 
-```nodejs
+```js
 const {Model, Field} = require("fireo)
 
 class User extends Model {
@@ -43,14 +43,14 @@ console.log(u.key)
 
 ## Getting Data
 
-```nodejs
+```js
 const user = await User.collection.get({key: user_key});
 console.log(user.name, user.age)
 ```
 
 ## Update Data
 
-```nodejs
+```js
 const u = User.init();
 u.name = "Arfan";
 u.update(user_key);
@@ -58,6 +58,6 @@ u.update(user_key);
 
 ## Delete Data
 
-```nodejs
+```js
 await User.collection.delete({key: user_key});
 ```

@@ -48,16 +48,14 @@ When using transactions, note that:
 
 The following example shows how to create and run a transaction:
 
-```python
-transaction = fireo.transaction()
+```js
+const {Fireo} = require("fireo");
 
-@fireo.transactional
-def update_in_transaction(transaction, city_key):
-    city = City.collection.get(city_key, transaction)
-    city.population = city.population + 1
-    city.update(transaction=transaction)
-
-update_in_transaction(transaction, city_key)
+await Fireo.runTransaction(async (t) => {
+    const city = await City.collection.get({key: city_key, transaction: t});
+    city.population = city.population + 1;
+    await city.update({transaction: t});
+});
 ```
 
 ## Passing information out of transactions
@@ -67,40 +65,38 @@ multiple times and are not guaranteed to run on the UI thread. Instead, pass inf
 you need out of your transaction functions. The following example builds on the previous 
 example to show how to pass information out of a transaction:
 
-```python
-transaction = fireo.transaction()
+```js
+const {Fireo} = require("fireo");
 
-@fireo.transactional
-def update_in_transaction(transaction, city_key):
-    city = City.collection.get(city_key, transaction)
-    new_population = city.population + 1
-    if new_population < 1000000:
-        city.population = new_population
-        city.update(transaction=transaction)
-        return True
-    else:
-        return False
+const result = await Fireo.runTransaction(async (t) => {
+    const city = await City.collection.get({key: city_key, transaction: t});
+    const new_population = city.population + 1;
+    if (new_population < 1000000){
+        city.population = new_population;
+        await city.update({transaction: t});
+        return true;
+    }
+    return false;
+});
 
-result = update_in_transaction(transaction, city_key)
-if result:
-    print('Population updated')
-else:
-    print('Sorry! Population is too big.')
+if (result){
+    console.log('Population updated');
+}else{
+    console.log('Sorry! Population is too big.');
+}
 ```
 
 ## Transaction in filter query
 You can also apply transaction on filter queries.
 
-```python
-transaction = fireo.transaction()
+```js
+const {Fireo} = require("fireo");
 
-@fireo.transactional
-def update_in_transaction(transaction):
-    city = City.collection.filter('state', '==', 'CA').transaction(transaction).get()
-    city.population = city.population + 1
-    city.update(transaction=transaction)
-
-update_in_transaction(transaction)
+await Fireo.runTransaction(async (t) => {
+    const city = await City.collection.filter('state', '==', 'CA').transaction(t).get();
+    city.population = city.population + 1;
+    await city.update({transaction: t});
+});
 ```
 
 ## Transaction failure
@@ -124,28 +120,26 @@ as a single batch that contains any combination of `create()`, `update()`, or `d
 A batch of writes completes atomically and can write to multiple documents. 
 The following example shows how to build and commit a write batch:
 
-```python
-batch = fireo.batch()
+```js
+const {Fireo} = require("fireo");
 
-# Create the data for NYC
-City.collection.create(batch=batch, state='NYC', population=500000)
+const batch = Fireo.batch();
 
-# Update the population for SF
-city = City()
-city.population = 1000000
-city.update(batch=batch)
+// Create the data for NYC
+const city = City.fromObject({state: 'NYC', population: 500000});
+city.save({batch});
 
-# Delete LA
-City.collection.delete(key=city.key, batch=batch)
+// Update the population for SF
+const city = City.init();
+city.population = 1000000;
+city.update({key: cityKey, batch});
 
-# Commit the batch
-batch.commit()
-```
+// Delete LA
+const cityLA = await City.collection.where("city", "==", "LA").get();
+cityLA.delete({batch})
 
-Document can also `delete()` by `filter` operation
-
-```python
-City.collection.filter('state', '==', 'CA').batch(batch).delete()
+// Commit the batch
+await batch.commit()
 ```
 
 A batched write can contain up to 500 operations. Each operation in the batch counts separately 

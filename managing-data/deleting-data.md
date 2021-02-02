@@ -23,7 +23,7 @@ To delete single document pass `key` to manager
 ### Example Usage
 {: .no_toc }
 
-```nodejs
+```js
 await User.collection.delete({key: user_key});
 ```
 
@@ -33,7 +33,7 @@ Delete all documents from collection
 ### Example Usage
 {: .no_toc }
 
-```nodejs
+```js
 await User.collection.delete();
 ```
 
@@ -42,7 +42,7 @@ Deleting any document not delete it's sub collection you need to delete them sep
 
 Suppose you want to delete `post` and all it's `reviews`
 
-```nodejs
+```js
 await Post.collection.delete({key: post_key, child: true})
 ```
 
@@ -51,6 +51,6 @@ This will delete the `post` and all it's `sub collection` in this case `reviews`
 ## Delete by query
 FireO also allow you to delete multiple documents by **query**
 
-```nodejs
+```js
 await Post.collection.where("title", "==", "some title").delete();
 ```
