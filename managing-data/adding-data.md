@@ -23,7 +23,7 @@ Create model object and add values to it and `save()` the model. After saving mo
 ### Example Usage
 
 ```js
-const {Model, Field} = require("fireo);
+const {Model, Field} = require("fireo");
 
 
 class User extends Model {
@@ -64,7 +64,7 @@ Custom id can also be specified by using [IDField](/fields/id-field)
 {: .no_toc }
 
 ```js
-const {Model, Field} = require("fireo);
+const {Model, Field} = require("fireo");
 
 class User extends Model{
     user_id = Field.ID();
@@ -123,7 +123,7 @@ A sub collection is a collection associated with a specific document. In FireO w
 ### Example Usage
 
 ```js
-const {Model, Field} = require("fireo);
+const {Model, Field} = require("fireo");
 
 class Post extends Model{
     title = Field.Text();
