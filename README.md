@@ -13,6 +13,10 @@
     <br><br><br>
 </p>
 
+## Available in other language
+
+1. FireO is available also in `python` [FireO Python](https://github.com/octabytes/FIreO)
+
 ## Installation
 
 ```shell
