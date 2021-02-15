@@ -13,11 +13,19 @@ class Query {
   }
 
   /**
+   * Get Field DB
+   * @param {string} name - Name of the field
+   */
+  __getField(name) {
+    return this.__collection.__meta.fields[name];
+  }
+
+  /**
    * Get Field DB name
    * @param {string} name - Name of the field
    */
   __getFieldName(name) {
-    return this.__collection.__meta.fields[name].name;
+    return this.__getField(name).name;
   }
 
   /**
@@ -28,7 +36,10 @@ class Query {
    */
   where(field, operator, value) {
     const fieldName = this.__getFieldName(field);
-    let v = value;
+    const f = this.__getField(field);
+    f.setValue(value);
+
+    let v = f.getValue;
 
     if (this.__collection.__meta.config.toLowercase) {
       try {
