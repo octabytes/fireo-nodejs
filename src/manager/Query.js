@@ -196,9 +196,20 @@ class Query {
     }
 
     return {
-      cursor: this.__encodeCursor(JSON.stringify(this.__queryParameters)),
+      cursor: this.__encodeCursor(JSON.stringify(this.__queryCursor)),
       list: modelList,
     };
+  }
+
+  get __queryCursor() {
+    const c = this.__queryParameters;
+    if (this.__queryParameters.offset) {
+      c.offset = this.__queryParameters.offset + this.__queryParameters.limit;
+    } else {
+      c.offset = this.__queryParameters.limit;
+    }
+
+    return c;
   }
 
   __encodeCursor(cursor) {

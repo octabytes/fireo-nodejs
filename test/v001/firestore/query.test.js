@@ -184,10 +184,13 @@ describe("Query", () => {
         .fetch();
       expect(query.cursor).to.be.not.undefined;
 
+      const lastDocAge = query.list[query.list.length - 1].age;
+
       const nextQuery = await UserCursor.collection
         .cursor(query.cursor)
         .fetch();
       expect(nextQuery.list.length).to.equal(3);
+      expect(nextQuery.list[0].age > lastDocAge);
     });
 
     it("should able to modify the limit of query cursor", async () => {
