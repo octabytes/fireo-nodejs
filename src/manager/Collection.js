@@ -156,6 +156,15 @@ class Collection extends BaseManager {
   }
 
   /**
+   * Set firestore offset
+   * @param {number} number - Starting number
+   */
+  offset(number) {
+    const query = new Query(this);
+    return query.offset(number);
+  }
+
+  /**
    * Set parent key
    * @param {string} key - Key of parent document
    */
