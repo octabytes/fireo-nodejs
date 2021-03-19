@@ -23,5 +23,6 @@ Gemfile.lock
 .sass-cache
 _site
 
-main.py
+main.js
 service-account.json
+node_modules/
