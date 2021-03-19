@@ -138,6 +138,15 @@ class Collection extends BaseManager {
   }
 
   /**
+   * Limit collection docs in reverse order
+   * @param {number} limit - Limit the firestore documents
+   */
+  limitToLast(number) {
+    const query = new Query(this);
+    return query.limitToLast(number);
+  }
+
+  /**
    * Order the document
    * @param {string} field - field name
    */

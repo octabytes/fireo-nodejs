@@ -72,6 +72,15 @@ class Query {
   }
 
   /**
+   * Limit To Last, limit firestore docs in reverse order
+   * @param {number} number - Limit number of results
+   */
+  limitToLast(number) {
+    this.__queryParameters.limitToLast = number;
+    return this;
+  }
+
+  /**
    * Order the document
    * @param {string} field - field name
    */
@@ -168,6 +177,10 @@ class Query {
 
     if (this.__queryParameters.limit) {
       ref = ref.limit(this.__queryParameters.limit);
+    }
+
+    if (this.__queryParameters.limitToLast) {
+      ref = ref.limitToLast(this.__queryParameters.limitToLast);
     }
 
     if (limit) {
