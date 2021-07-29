@@ -13,7 +13,7 @@
     <br><br><br>
 </p>
 
-## Available in other language
+## Available in other language (Python)
 
 1. FireO is available also in `python` [FireO Python](https://github.com/octabytes/FireO)
 
